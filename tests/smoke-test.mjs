@@ -115,6 +115,8 @@ const minimumSizes = {
   'assets/monks/monje-izquierdo.webp': 20000,
   'assets/monks/monje-derecho.webp': 20000,
   'assets/monks/dance/monje-left-dance.webp': 50000,
+  'assets/monks/dance/source/monje-left-dance-original.webp': 50000,
+  'assets/monks/dance/source/monje-right-dance-original.webp': 50000,
   'assets/monks/dance/monje-right-dance.webp': 50000,
   'assets/monks/dance/monje-left-poster.webp': 5000,
   'assets/monks/dance/monje-right-poster.webp': 5000,
@@ -151,8 +153,13 @@ for (const [side, performer] of Object.entries(danceManifest.performers)) {
     const digest = createHash('sha256').update(readFileSync(assetPath)).digest('hex');
     assert.equal(digest, asset.sha256, `Dance SHA-256 mismatch: ${asset.file}`);
   }
-  assert.equal(performer.animation.frames, 9, `${side} dance cycle must contain 9 frames`);
-  assert.equal(performer.animation.frameDurationMs, 280, `${side} dance timing mismatch`);
+  assert.equal(performer.animation.frames, 63, `${side} dance cycle must contain 63 interpolated frames`);
+  assert.equal(performer.animation.frameDurationMs, 40, `${side} dance timing mismatch`);
+  assert.equal(performer.animation.totalDurationMs, 2520, `${side} dance cycle duration mismatch`);
+  const sourcePath = join(root, performer.source);
+  assert.ok(existsSync(sourcePath), `Missing preserved ${side} source animation`);
+  const sourceDigest = createHash('sha256').update(readFileSync(sourcePath)).digest('hex');
+  assert.equal(sourceDigest, performer.sourceSha256, `${side} source SHA-256 mismatch`);
 }
 
-console.log('PASS — Phase 2/3/4/5/6 smoke tests (semantic HTML, eight scenes, full-bleed sections, fluid content rails, ambient profiles, scroll timelines, animated performers, accessible settings, reduced motion, and asset integrity).');
+console.log('PASS — Phase 1/2/3/4/5/6 smoke tests (semantic HTML, eight scenes, full-bleed sections, fluid content rails, ambient profiles, scroll timelines, animated performers, accessible settings, reduced motion, and asset integrity).');
