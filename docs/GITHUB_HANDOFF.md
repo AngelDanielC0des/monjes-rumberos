@@ -1,45 +1,56 @@
-# GitHub handoff — Monjes Rumberos
+# GitHub publication — Monjes Rumberos
 
-Repositorio de destino confirmado: https://github.com/AngelDanielC0des/monjes-rumberos
+<https://github.com/AngelDanielC0des/monjes-rumberos>
 
-- Repositorio existente, inicialmente vacío.
-- Rama local preparada: `main`.
-- El árbol de trabajo contiene el código, assets, documentación y pruebas del proyecto.
-- El commit inicial conserva el proyecto completo; el commit de entrega incorpora los últimos resultados de Chromium y los ajustes del test runner.
-- La conexión de GitHub disponible en el entorno confirma permisos de escritura, pero el runtime local no dispone de salida de red a `github.com`; por eso no ha sido posible ejecutar `git push` desde esta sesión.
+## Publication status
 
-## Publicar desde Windows
+- Repository: `AngelDanielC0des/monjes-rumberos`
+- Default branch: `main`
+- Status: populated; the repository is no longer empty.
+- Source, documentation, tests and runtime assets are committed directly to GitHub.
+- The one-time import workflow and transfer chunks have been removed after successful publication.
+- CI workflow: `.github/workflows/ci.yml` (Ubuntu 24.04, Node 22, Python 3.12, Playwright Chromium).
 
-Se entrega `Monjes_Rumberos_Entrega_Final.bundle`, un Git bundle con el historial y la rama `main` completos. No hace falta inicializar otro repositorio ni copiar archivos manualmente.
+## Included in the repository
 
-1. Clona el bundle en una carpeta de trabajo:
+- Semantic HTML, CSS and native JavaScript modules.
+- Full-bleed responsive layout correction in `layout-fix.css`.
+- Eight section backgrounds, desktop and mobile variants.
+- Transparent optimized WebP characters, animated WebP loops, static posters and GIF fallbacks.
+- Scroll-driven ambient lighting and the accessible performer settings panel.
+- Vercel configuration and reproducible static build script.
+- Documentation, QA reports, Chromium screenshots, smoke tests and responsive browser tests.
+- npm lockfile and Python Playwright test requirements.
 
-   ```powershell
-   git clone "C:\RUTA\Monjes_Rumberos_Entrega_Final.bundle" monjes-rumberos
-   cd monjes-rumberos
-   ```
+## Asset scope
 
-2. Ejecuta el script incluido:
+The optimized transparent WebP character assets and all assets required to build the landing are included. The two original high-resolution working PNG masters under the local `assets/source/` directory are not included in this GitHub snapshot; they are not runtime assets and have not been replaced by lower-quality conversions. The omission is documented rather than hidden.
 
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\PUSH_TO_GITHUB.ps1
-   ```
+## Verification
 
-3. Si Git Credential Manager lo solicita, completa el inicio de sesión de GitHub en el navegador. El script configura el remoto `origin` y publica `main`.
+The import workflow completed successfully after:
+- Restoring all production image assets from the live Vercel deployment.
+- Running JavaScript syntax checks and smoke tests.
+- Running Chromium responsive regression at 2048, 1440, 1024, 768, 390 and 320 px.
+- Building the static output and checking all expected runtime files.
 
-Destino configurado por el script:
+The standalone CI workflow was then added directly to the repository and has passed once on the published source. Subsequent commits also trigger the same CI workflow.
 
-`https://github.com/AngelDanielC0des/monjes-rumberos.git`
+## Production
 
-## Verificación previa
+- Website: https://monjes-rumberos.vercel.app/
+- Build command: `npm run build`
+- Output directory: `public`
 
-- `node --check` para los cuatro módulos JavaScript: PASS.
-- `node tests/smoke-test.mjs`: PASS.
-- `bash scripts/build-static.sh`: PASS.
-- `python tests/browser-check.py`: PASS en Chromium para 2048, 1440, 1024, 768, 390 y 320 px.
-- Se validan secciones full-bleed, fondos, carriles de contenido, performers, controles, reduced motion, menú móvil, formulario y ausencia de overflow horizontal.
+No local bundle download or manual push is required. Clone the GitHub repository directly:
 
-
-## Assets incluidos en GitHub
-
-El repositorio conserva los assets transparentes WebP optimizados, los ciclos WebP/GIF, los ocho fondos responsive y todos los archivos necesarios para construir y desplegar la landing. Los dos PNG maestros de trabajo de assets/source no forman parte del build público y no se incluyen en esta importación; no se sustituyen por conversiones WebP de menor calidad.
+```powershell
+git clone https://github.com/AngelDanielC0des/monjes-rumberos.git
+cd monjes-rumberos
+npm ci
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
+npm run check
+npm test
+npm run build
+```
