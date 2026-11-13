@@ -53,6 +53,14 @@ La matriz cubre escritorio, tablet, móvil, orientación horizontal y poca altur
 - No se añade todavía el reproductor/búsqueda de YouTube (Fase 4).
 - No se modifica la coreografía ni los assets de los monjes (Fase 1 completada).
 
+## Implementación realizada
+
+- `layout-fix.css` añade el sistema común de `min-height: 100vh / 100svh / 100dvh` con Grid y paddings fluidos.
+- Hero, secciones de contenido y panel de sonido centran verticalmente el contenido cuando cabe y crecen cuando es más alto que el viewport.
+- El panel de sonido conserva su borde interior sin sumar un píxel extra a la altura exterior de la sección.
+- En pantallas de hasta 640 px, el menú móvil limita su altura a `100dvh - 112px`, permite scroll vertical interno y evita el scroll de fondo. Esto resuelve el último enlace inaccesible detectado a 568 × 320.
+- La regresión Chromium comprueba nueve viewports, altura esperada por sección, desbordamiento vertical, cobertura de fondos y navegación móvil.
+
 ## Estado
 
-**En curso.** Implementación del sistema de altura mínima adaptativa y regresión geométrica por viewport.
+**Implementación realizada; pendiente de validación completa de Chromium y build.** No se fusiona ni se despliega a producción.
