@@ -1,0 +1,9 @@
+{
+  "candidateRunId": 43479378677,
+  "candidateHeadSha": "c1878c324319b692d072893fd2d4405daeaa537a",
+  "visualReview": "approved",
+  "expectedCandidates": {
+    "left": "0b2aeb2c4b83135858092795367a50217683db7601e4bea3f785873d7b1e6a01",
+    "right": "2d3e5ad650c93aae685c5fe4314bdc874e674c413e2a4137d772cbfc7e5201b8"
+  }
+}
