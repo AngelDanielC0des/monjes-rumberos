@@ -402,3 +402,16 @@
   align-content: center;
   padding-block: var(--sound-padding-block);
 }
+
+/* Low-height phones: keep the complete mobile navigation reachable. */
+@media (max-width: 640px) {
+  .mobile-menu {
+    max-height: calc(100vh - 112px);
+    max-height: calc(100svh - 112px);
+    max-height: calc(100dvh - 112px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-block: 12px;
+  }
+}
