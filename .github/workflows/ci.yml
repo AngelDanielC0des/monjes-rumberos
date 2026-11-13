@@ -38,6 +38,9 @@ jobs:
           npm run check
           npm run test:smoke
 
+      - name: Animated WebP interpolation regression
+        run: python tests/dance-webp-test.py
+
       - name: Responsive Chromium regression
         run: npm run test:browser
 
