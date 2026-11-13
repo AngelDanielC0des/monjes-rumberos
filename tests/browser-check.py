@@ -110,7 +110,7 @@ with sync_playwright() as p:
         target_scroll = min(420, max_scroll)
         assert target_scroll > 0, {'maxScroll': max_scroll, 'width': width}
         page.evaluate("(target) => window.scrollTo(0, target)", target_scroll)
-        page.wait_for_function("(target) => Math.abs(window.scrollY - target) < 2", target_scroll, timeout=2500)
+        page.wait_for_function(f"Math.abs(window.scrollY - {target_scroll}) < 2", timeout=2500)
         page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
         timeline_later = page.evaluate("""() => {
           const image = document.querySelector('#inicio .scene-media img');
