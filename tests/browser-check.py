@@ -65,7 +65,7 @@ with sync_playwright() as p:
     page.add_script_tag(content=js_source)
     page.wait_for_timeout(200)
 
-    for width, height in [(2048, 1134), (1440, 900), (1024, 768), (768, 900), (390, 844), (320, 740)]:
+    for width, height in [(2048, 1134), (1440, 900), (1024, 768), (823, 523), (768, 900), (568, 320), (390, 844), (320, 740), (844, 390)]:
         print(f'browser-check: viewport {width}x{height}', flush=True)
         page.set_viewport_size({'width': width, 'height': height})
         page.evaluate('window.scrollTo(0, 0)')
@@ -231,10 +231,33 @@ with sync_playwright() as p:
           const box = (selector) => {
             const element = document.querySelector(selector);
             const rect = element.getBoundingClientRect();
-            return { x: rect.x, width: rect.width, right: rect.right };
+            return { x: rect.x, y: rect.y, width: rect.width, height: rect.height, right: rect.right, bottom: rect.bottom };
+          };
+          const sectionMetric = (sectionSelector, contentSelector) => {
+            const section = document.querySelector(sectionSelector);
+            const content = section.querySelector(contentSelector);
+            const rect = section.getBoundingClientRect();
+            const style = getComputedStyle(section);
+            const px = (name) => parseFloat(style[name]) || 0;
+            const requiredHeight = content.offsetHeight
+              + px('paddingTop') + px('paddingBottom')
+              + px('borderTopWidth') + px('borderBottomWidth');
+            return {
+              x: rect.x,
+              width: rect.width,
+              height: rect.height,
+              viewportHeight: innerHeight,
+              contentHeight: content.offsetHeight,
+              requiredHeight,
+              expectedHeight: Math.max(innerHeight, requiredHeight),
+              clientHeight: section.clientHeight,
+              scrollHeight: section.scrollHeight,
+              verticalOverflow: section.scrollHeight - section.clientHeight
+            };
           };
           return {
             viewport: window.innerWidth,
+            viewportHeight: window.innerHeight,
             main: box('.page-shell'),
             hero: box('#inicio'),
             manifesto: box('#manifiesto'),
@@ -247,6 +270,21 @@ with sync_playwright() as p:
             formatsContent: box('#formatos .section-inner'),
             bookingContent: box('#booking .section-inner'),
             soundContent: box('.sound-panel__inner'),
+            sectionHeights: {
+              hero: sectionMetric('#inicio', '.hero-inner'),
+              manifesto: sectionMetric('#manifiesto', '.section-inner'),
+              ritual: sectionMetric('#ritual', '.section-inner'),
+              formats: sectionMetric('#formatos', '.section-inner'),
+              sound: sectionMetric('.sound', '.sound-panel'),
+              booking: sectionMetric('#booking', '.section-inner')
+            },
+            sceneCoverage: {
+              hero: box('#inicio .scene-media'),
+              manifesto: box('#manifiesto .scene-media'),
+              ritual: box('#ritual .scene-media'),
+              sound: box('.sound-panel .scene-media'),
+              booking: box('#booking .scene-media')
+            },
             leftPerformer: box('.performer--left'),
             rightPerformer: box('.performer--right')
           };
@@ -264,6 +302,21 @@ with sync_playwright() as p:
                 assert content_width >= width * .65, {
                     'width': width, 'content': content_name, 'geometry': layout_geometry
                 }
+        for section_name, metrics in layout_geometry['sectionHeights'].items():
+            assert metrics['height'] >= metrics['viewportHeight'] - 1.5, {
+                'width': width, 'section': section_name, 'metrics': metrics
+            }
+            assert abs(metrics['height'] - metrics['expectedHeight']) <= 2.5, {
+                'width': width, 'section': section_name, 'metrics': metrics
+            }
+            assert metrics['verticalOverflow'] <= 1.5, {
+                'width': width, 'section': section_name, 'metrics': metrics
+            }
+        for scene_name, scene_box in layout_geometry['sceneCoverage'].items():
+            section_box = layout_geometry[scene_name]
+            assert abs(scene_box['height'] - section_box['height']) <= 2.5, {
+                'width': width, 'scene': scene_name, 'sceneBox': scene_box, 'sectionBox': section_box
+            }
         if width >= 1181:
             assert layout_geometry['leftPerformer']['right'] <= layout_geometry['manifestoContent']['x'] + 2, layout_geometry
             assert layout_geometry['rightPerformer']['x'] >= layout_geometry['manifestoContent']['right'] - 8, layout_geometry
