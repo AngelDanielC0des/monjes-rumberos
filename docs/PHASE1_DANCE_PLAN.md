@@ -72,4 +72,23 @@ El GIF fallback y los pósteres estáticos se conservan sin cambios. El fallback
 
 ## Estado
 
-**Candidato RIFE aprobado para integración en la rama de trabajo.** La publicación está condicionada a ejecutar la regresión completa (smoke, prueba de payload WebP, Chromium y build estático). El PR seguirá en borrador y no se fusionará ni desplegará a producción.
+## Entrega verificada
+
+- Commit de integración: `407148ac2c0facb609c72d12bfc833ec8998cd08`.
+- PR: [#1 — Auditoría de línea base y rama limpia](https://github.com/AngelDanielC0des/monjes-rumberos/pull/1), sigue en borrador.
+- CI de publicación: [run 43481860477](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43481860477) — **success**.
+- JavaScript y smoke tests: PASS.
+- Prueba de payload WebP: PASS en ambos monjes.
+- Regresión responsive Chromium: PASS.
+- Build estático: PASS.
+- Se preservaron los WebP originales en `assets/monks/dance/source/`; el build confirma que no se publican.
+- GIF fallback y pósteres permanecen sin cambios.
+- `main` conserva el SHA base `2448be30dc88d4b58606f2f3cfd1d975d6dfecb6`; no se ha realizado despliegue ni promoción a producción.
+
+La prueba de Chromium también se hizo más determinista: ahora espera a que se complete el scroll y compara el transform renderizado de la escena, en lugar de leer una instantánea potencialmente obsoleta de `animation.currentTime`.
+
+## Estado
+
+**FASE 1 COMPLETADA Y VERIFICADA.** Los dos monjes usan ciclos WebP interpolados de 63 fotogramas a 25 FPS, con la duración original de 2.520 ms. La rama de trabajo y el PR draft permanecen separados de producción.
+
+**Siguiente:** Fase 2 — secciones adaptativas a la altura del viewport, con CSS Grid/Flexbox y expansión accesible cuando el contenido no cabe.
