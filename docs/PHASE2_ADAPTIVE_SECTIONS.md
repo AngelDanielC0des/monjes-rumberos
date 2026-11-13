@@ -63,4 +63,4 @@ La matriz cubre escritorio, tablet, móvil, orientación horizontal y poca altur
 
 ## Estado
 
-**Implementación realizada; pendiente de validación completa de Chromium y build.** No se fusiona ni se despliega a producción.
+**FASE 2 COMPLETADA Y VERIFICADA.** La regresión Chromium de nueve viewports y el build estático pasan en el head `4762672471df31e75d651bb3cd41ec6972c0c277` (CI run `43484418099`). No se fusiona ni se despliega a producción.
