@@ -1,0 +1,119 @@
+name: Phase 1 — publish reviewed dance assets
+
+on:
+  push:
+    branches:
+      - 'codex/monjes-rumberos-phase-0'
+    paths:
+      - '.phase1-dance-approval.json'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout approved working branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          persist-credentials: true
+
+      - name: Read candidate approval marker
+        id: approval
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          marker = json.loads(Path(".phase1-dance-approval.json").read_text(encoding="utf-8"))
+          run_id = str(marker.get("candidateRunId", "")).strip()
+          head_sha = str(marker.get("candidateHeadSha", "")).strip()
+          if not run_id.isdigit() or len(head_sha) != 40:
+              raise SystemExit("Invalid candidate approval marker")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"run_id={run_id}\n")
+              output.write(f"head_sha={head_sha}\n")
+          PY
+
+      - name: Verify approved candidate workflow run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CANDIDATE_RUN_ID: ${{ steps.approval.outputs.run_id }}
+          CANDIDATE_HEAD_SHA: ${{ steps.approval.outputs.head_sha }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${CANDIDATE_RUN_ID}" > "$RUNNER_TEMP/candidate-run.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          run = json.loads(Path(os.environ["RUNNER_TEMP"] + "/candidate-run.json").read_text(encoding="utf-8"))
+          expected = {
+              "path": ".github/workflows/phase1-dance-candidates.yml",
+              "head_branch": "codex/monjes-rumberos-phase-0",
+              "head_sha": os.environ["CANDIDATE_HEAD_SHA"],
+              "conclusion": "success",
+          }
+          mismatches = {key: (run.get(key), value) for key, value in expected.items() if run.get(key) != value}
+          if mismatches:
+              raise SystemExit(f"Candidate run does not match approval marker: {mismatches}")
+          PY
+
+      - name: Download reviewed candidate artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: phase1-rife-dance-candidates
+          path: phase1-dance-candidates
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.approval.outputs.run_id }}
+
+      - name: Preserve original loops and publish RIFE WebP assets
+        run: python scripts/publish-dance-candidates.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install regression dependencies
+        run: |
+          npm ci
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Verify source, manifest and animation payloads
+        run: |
+          npm run check
+          npm run test:smoke
+          python tests/dance-webp-test.py
+
+      - name: Run responsive Chromium regression
+        run: npm run test:browser
+
+      - name: Build production-shaped static output
+        run: |
+          npm run build
+          test -s public/assets/monks/dance/monje-left-dance.webp
+          test -s public/assets/monks/dance/monje-right-dance.webp
+          test ! -e public/assets/monks/dance/source
+
+      - name: Commit reviewed assets to working branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .phase1-dance-approval.json
+          git add assets/monks/dance/manifest.json
+          git add assets/monks/dance/monje-left-dance.webp assets/monks/dance/monje-right-dance.webp
+          git add assets/monks/dance/source/monje-left-dance-original.webp
+          git add assets/monks/dance/source/monje-right-dance-original.webp
+          git diff --cached --check
+          git commit -m "feat(phase-1): publish 25fps RIFE dance loops"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
