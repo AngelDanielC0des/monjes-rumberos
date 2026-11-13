@@ -263,6 +263,7 @@ with sync_playwright() as p:
             manifesto: box('#manifiesto'),
             ritual: box('#ritual'),
             formats: box('#formatos'),
+            sound: box('.sound'),
             soundPanel: box('.sound-panel'),
             booking: box('#booking'),
             manifestoContent: box('#manifiesto .section-inner'),
@@ -289,7 +290,7 @@ with sync_playwright() as p:
             rightPerformer: box('.performer--right')
           };
         }""")
-        for section_name in ['main', 'hero', 'manifesto', 'ritual', 'formats', 'soundPanel', 'booking']:
+        for section_name in ['main', 'hero', 'manifesto', 'ritual', 'formats', 'sound', 'soundPanel', 'booking']:
             assert abs(layout_geometry[section_name]['width'] - width) <= 1.5, {
                 'width': width, 'section': section_name, 'geometry': layout_geometry
             }
