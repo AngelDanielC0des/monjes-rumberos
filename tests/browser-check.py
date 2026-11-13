@@ -94,7 +94,7 @@ with sync_playwright() as p:
         }""")
         page.wait_for_function("window.scrollY === 0", timeout=2000)
         page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
-        native_timeline_supported = page.evaluate("CSS.supports('view-timeline-name: --scene-view') && CSS.supports('animation-timeline: --scene-view') && CSS.supports('animation-range: entry 0% exit 100%)'")
+        native_timeline_supported = page.evaluate("CSS.supports('view-timeline-name: --scene-view') && CSS.supports('animation-timeline: --scene-view') && CSS.supports('animation-range: entry 0% exit 100%')")
         timeline_start = page.evaluate("""() => {
           const image = document.querySelector('#inicio .scene-media img');
           const animation = [...image.getAnimations()].find(item =>
