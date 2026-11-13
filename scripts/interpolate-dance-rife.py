@@ -142,7 +142,8 @@ def write_contact_sheet(frames: list[Image.Image], path: Path, side: str) -> Non
 
 
 def generate_side(side: str, interpolator: RifeInterpolator, output_dir: Path) -> dict:
-    source_path = ASSET_DIR / f"monje-{side}-dance.webp"
+    preserved_source = ASSET_DIR / "source" / f"monje-{side}-dance-original.webp"
+    source_path = preserved_source if preserved_source.is_file() else ASSET_DIR / f"monje-{side}-dance.webp"
     source_frames, source_durations = load_rgba_frames(source_path)
     source_ms = source_durations[0]
     cycle_ms = sum(source_durations)
