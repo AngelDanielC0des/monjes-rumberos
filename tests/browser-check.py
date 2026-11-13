@@ -390,7 +390,29 @@ with sync_playwright() as p:
             button.click()
             assert button.get_attribute('aria-expanded') == 'true'
             assert page.locator('#mobile-menu').is_visible()
-            page.locator('#mobile-menu a[href="#booking"]').click()
+            last_menu_link = page.locator('#mobile-menu a[href="#booking"]')
+            last_menu_link.scroll_into_view_if_needed()
+            menu_geometry = page.evaluate("""() => {
+              const menu = document.querySelector('#mobile-menu');
+              const link = menu.querySelector('a[href="#booking"]');
+              const menuRect = menu.getBoundingClientRect();
+              const linkRect = link.getBoundingClientRect();
+              return {
+                menuTop: menuRect.top,
+                menuBottom: menuRect.bottom,
+                menuHeight: menuRect.height,
+                menuScrollHeight: menu.scrollHeight,
+                menuClientHeight: menu.clientHeight,
+                linkTop: linkRect.top,
+                linkBottom: linkRect.bottom
+              };
+            }""")
+            assert menu_geometry['menuTop'] >= -1 and menu_geometry['menuBottom'] <= height + 1, {
+                'width': width, 'height': height, 'menu': menu_geometry
+            }
+            assert menu_geometry['linkTop'] >= menu_geometry['menuTop'] - 1
+            assert menu_geometry['linkBottom'] <= menu_geometry['menuBottom'] + 1
+            last_menu_link.click()
             assert button.get_attribute('aria-expanded') == 'false'
         else:
             assert data['framePosition'] == 'fixed', data
