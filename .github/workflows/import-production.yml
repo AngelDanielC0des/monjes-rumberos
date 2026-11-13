@@ -1,4 +1,5 @@
 name: Import complete Monjes Rumberos project
+# v2: reproducible npm lockfile is committed before the import workflow
 
 on:
   push:
