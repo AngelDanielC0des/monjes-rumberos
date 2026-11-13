@@ -6,31 +6,70 @@ Mejorar la fluidez perceptible de los dos monjes sin rediseñar sus identidades,
 
 ## Línea base verificada
 
-- Los dos WebP animados contienen 9 fotogramas declarados.
-- La duración declarada es 280 ms por fotograma (2.520 ms por ciclo), equivalente a ~3,57 FPS.
-- Se conservan los GIF fallback y los pósteres estáticos.
+- Los dos WebP animados contienen 9 fotogramas de 280 ms.
+- Cada ciclo dura 2.520 ms (~3,57 FPS).
+- Los GIF fallback y pósteres estáticos se mantienen como línea de base.
 - El controlador `performer-motion.js` ya gestiona pausa, ocultación, visibilidad de pestaña y movimiento reducido.
 
-## Secuencia de trabajo
+## Evaluación de interpolación clásica
 
-1. **Inspección sin modificación:** extraer los fotogramas originales, comprobar duración real, dimensiones, alpha, límites de silueta y continuidad entre el último y el primer fotograma.
-2. **Selección del método:** probar interpolación temporal con compensación de movimiento sobre las imágenes RGBA. La máscara alpha se tratará por separado para reducir halos y bordes contaminados.
-3. **Generación candidata:** objetivo inicial 25 FPS (63 fotogramas por ciclo de 2,52 s), sin cambiar la duración total del baile.
-4. **Control visual:** comparar original e interpolado mediante hojas de contacto sobre fondo oscuro y revisar especialmente manos, máscara LED, cruz, mangas, cintura, faldón y botas.
-5. **Optimización:** medir peso, dimensiones, duración, decodificación y compatibilidad de WebP animado; conservar GIF fallback si sigue siendo necesario.
-6. **Integración:** actualizar manifiestos, SHA-256, pruebas de humo, prueba Chromium y build estático.
-7. **Entrega:** dejar cambios en esta rama y PR draft. No promover a producción ni fusionar automáticamente.
+Se extrajeron los 9 fotogramas y se comprobó el canal alpha de ambos ciclos. Se hicieron prototipos con interpolación óptica clásica (Farneback, DIS y FFmpeg minterpolate). En los cambios amplios de brazos y mangas generaban imágenes dobles, sombras residuales o deformaciones de silueta. **Esos prototipos se descartan; no se integrarán en la web.**
 
-## Criterios de aceptación
+## Método seleccionado
 
-- 25 FPS nominales, ciclo de 2.520 ms conservado y bucle sin pausa visible.
-- Alpha conservado; sin rectángulos de fondo ni halos cian/magenta.
-- Sin deformaciones evidentes, extremidades dobles, manos fantasma, máscara/cruz que cambien de forma o vibración de contorno.
-- Ambos monjes conservan movimientos distintos y su apariencia reconocible.
-- Los estados `paused`, `hidden`, pestaña oculta y `prefers-reduced-motion` continúan usando el póster estático.
-- Sin nuevos timers ni bucles JS permanentes.
-- Smoke tests, Chromium y build en verde.
+Se utiliza RIFE v4.9 (Real-Time Intermediate Flow Estimation), ejecutado localmente en CPU mediante ONNX Runtime:
+
+- Modelo ONNX fijado a la revisión `18dcfbe2c349d5922e353708153581d2039c576c`.
+- SHA-256 esperado: `76e4cef9ab42fa7dd4e8f6e4aba47462051e3faa969e4bca6479784fbab0ac6f`.
+- Pesos declarados MIT en el repositorio de distribución, con atribución a hzwer / Practical-RIFE.
+- Modelo: https://huggingface.co/edgetools/rife
+- El modelo de 21,5 MB no se incorpora al bundle web ni al repositorio de assets de runtime.
+
+RGB premultiplicado y canal alpha se interpolan por separado para conservar transparencia y minimizar halos. Los fotogramas fuente se conservan intactos como referencias de pose.
+
+## Cadencia objetivo
+
+- 25 FPS.
+- 40 ms por fotograma.
+- 63 fotogramas por ciclo de 2.520 ms.
+- Siete muestras temporales por intervalo de origen (fotograma original + seis intermedios).
+- Loop infinito, manteniendo la duración total del movimiento.
+
+## Resultado de la revisión visual
+
+Se generaron candidatos con el modelo RIFE v4.9 fijado y se revisaron hojas de contacto completas y fotogramas individuales.
+
+| Métrica | Monje izquierdo | Monje derecho |
+|---|---:|---:|
+| Fotogramas de salida | 63 | 63 |
+| Cadencia | 25 FPS | 25 FPS |
+| Duración del ciclo | 2.520 ms | 2.520 ms |
+| WebP candidato | 1.002.118 bytes | 1.225.764 bytes |
+| SHA-256 | `0b2aeb2c4b83135858092795367a50217683db7601e4bea3f785873d7b1e6a01` | `2d3e5ad650c93aae685c5fe4314bdc874e674c413e2a4137d772cbfc7e5201b8` |
+
+Comprobaciones sobre los candidatos:
+
+- Los nueve fotogramas originales se conservan como poses de referencia en cada séptimo fotograma de salida.
+- El error medio RGB de esas poses, medido sobre la silueta visible y tras recomposición alfa, es inferior a 1,5 niveles por canal.
+- Todos los fotogramas conservan transparencia y opacidad completas en el canal alpha.
+- El salto del último fotograma al primero no supera la variación media de los pasos normales del ciclo.
+- No se observan duplicaciones evidentes de manos, arrastres de brazos ni deformaciones de la cruz/máscara en las hojas de contacto revisadas.
+- Los prototipos ópticos clásicos se descartan y no se incorporan.
+
+## Integración y control de regresión
+
+Antes de sustituir los WebP de runtime, se preservará una copia exacta de cada fuente en `assets/monks/dance/source/`. Ese directorio no se copia al build público.
+
+La publicación de candidatos ejecutará:
+
+1. Actualización del manifiesto con número de fotogramas, duración, dimensiones, bytes y SHA-256.
+2. Prueba Python del payload WebP real: 63 frames, 40 ms, 2.520 ms, alpha, loop y poses fuente.
+3. Smoke tests y comprobación de integridad de assets.
+4. Regresión responsive Chromium.
+5. Build estático y comprobación de que los originales no se despliegan.
+
+El GIF fallback y los pósteres estáticos se conservan sin cambios. El fallback GIF queda como compatibilidad heredada; los navegadores modernos utilizan el WebP interpolado.
 
 ## Estado
 
-**En curso.** Primer paso: inspección automatizada de fotogramas y canal alpha. No se modifican todavía los assets de runtime.
+**Candidato RIFE aprobado para integración en la rama de trabajo.** La publicación está condicionada a ejecutar la regresión completa (smoke, prueba de payload WebP, Chromium y build estático). El PR seguirá en borrador y no se fusionará ni desplegará a producción.
