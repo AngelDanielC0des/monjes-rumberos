@@ -26,6 +26,14 @@ assert.match(html, /<script src="\/scroll-scenes\.js" defer><\/script>/);
 assert.match(html, /<script src="\/performer-motion\.js" defer><\/script>/);
 assert.match(html, /<script src="\/performer-settings\.js" defer><\/script>/);
 assert.match(html, /id="performer-settings"/);
+assert.match(html, /id="sonido"/);
+assert.match(html, /href="#sonido"/);
+assert.match(html, /<script src="\\/section-navigation\\.js" defer><\\/script>/);
+assert.match(read('section-navigation.js'), /ArrowDown/);
+assert.match(read('section-navigation.js'), /PageDown/);
+assert.match(read('section-navigation.js'), /aria-current/);
+assert.match(read('section-navigation.js'), /prefers-reduced-motion/);
+
 assert.match(html, /data-performer-action="dance"/);
 assert.match(html, /data-performer-action="visibility"/);
 assert.match(html, /aria-controls="performer-settings"/);
