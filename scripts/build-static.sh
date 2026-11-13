@@ -6,7 +6,7 @@ cd "$ROOT"
 rm -rf public
 mkdir -p public/assets/images public/assets/sections public/assets/monks/dance
 
-for file in index.html styles.css layout-fix.css scroll-scenes.js performer-motion.js performer-settings.js app.js favicon.svg robots.txt sitemap.xml vercel.json; do
+for file in index.html styles.css layout-fix.css scroll-scenes.js performer-motion.js performer-settings.js section-navigation.js app.js favicon.svg robots.txt sitemap.xml vercel.json; do
   [[ -s "$file" ]] || { echo "Missing source file: $file" >&2; exit 1; }
   cp "$file" public/"$file"
 done
