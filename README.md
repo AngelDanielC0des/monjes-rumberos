@@ -10,7 +10,7 @@ Landing editorial nocturna para Monjes Rumberos. Sitio estático, sin framework 
 - Hero se carga con prioridad alta; los demás fondos usan lazy loading y decodificación asíncrona.
 - Overlays CSS específicos por escena preservan el contraste y el tono cinematográfico.
 - Los dos personajes maestros incorporan cruces bordadas; el marco fijo de los márgenes se ha reconstruido con los nuevos personajes.
-- Se conservan por separado los PNG maestros de cada personaje; son imágenes aplanadas, no capas anatómicas articulables.
+- Los PNG maestros originales de trabajo no se incluyen en este snapshot de GitHub; sí se conservan los WebP transparentes optimizados utilizados por la web.
 
 
 ## Fase 3 — iluminación dinámica por scroll
@@ -43,7 +43,7 @@ Incluye manifiesto, ritual en tres momentos, formatos de aparición, universo mu
 - `assets/sections/` — ocho escenas con variantes desktop/móvil y manifiesto de hashes.
 - `assets/monks/` — personajes WebP transparentes y marco original conservado.
 - `assets/monks/dance/` — dos ciclos de baile en WebP animado, pósteres estáticos, fallback GIF y manifiesto.
-- `assets/source/` — originales y maestros PNG de alta resolución para rigging.
+- `assets/source/` — los PNG maestros originales no están incluidos en este snapshot; los WebP transparentes optimizados están en `assets/monks/`.
 - `assets/images/monjes-frame.webp` — preview social Open Graph.
 - `tests/` — smoke test y comprobación Chromium responsive.
 - `scripts/build-static.sh` — build estático reproducible desde los archivos fuente; no depende de un tarball obsoleto.
