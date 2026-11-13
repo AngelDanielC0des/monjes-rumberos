@@ -314,7 +314,10 @@ with sync_playwright() as p:
                 'width': width, 'section': section_name, 'metrics': metrics
             }
         for scene_name, scene_box in layout_geometry['sceneCoverage'].items():
-            section_box = layout_geometry[scene_name]
+            # Sound artwork sits inside a bordered panel; compare against the
+            # panel's border box, not the outer section's additional border.
+            section_key = 'soundPanel' if scene_name == 'sound' else scene_name
+            section_box = layout_geometry[section_key]
             assert abs(scene_box['height'] - section_box['height']) <= 2.5, {
                 'width': width, 'scene': scene_name, 'sceneBox': scene_box, 'sectionBox': section_box
             }
