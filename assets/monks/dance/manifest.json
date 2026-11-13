@@ -1,0 +1,84 @@
+{
+  "phase": 4,
+  "format": "animated WebP with static WebP poster",
+  "loop": "infinite",
+  "purpose": "Decorative, independent side performers. Runtime state controller exposes dancing, paused and hidden.",
+  "performers": {
+    "left": {
+      "animation": {
+        "file": "assets/monks/dance/monje-left-dance.webp",
+        "format": "animated WebP",
+        "frames": 9,
+        "frameDurationMs": 280,
+        "loop": 0,
+        "dimensions": [
+          360,
+          402
+        ],
+        "bytes": 129818,
+        "sha256": "9882399e87c46a49b447aed7faa13f197eb436cf3feee479b8d35d6a84d75b64",
+        "totalDurationMs": 2520
+      },
+      "poster": {
+        "file": "assets/monks/dance/monje-left-poster.webp",
+        "format": "WebP",
+        "dimensions": [
+          360,
+          402
+        ],
+        "bytes": 14364,
+        "sha256": "c5e0915fa443fec1fe6b6f59be1f9833d4553930b6ad4d045f1bed983c6c9c67"
+      },
+      "source": "assets/source/monje-left-dance-source.gif",
+      "sourceFormat": "GIF",
+      "notes": [
+        "Generated full-body dance cycle; not a skeletal Rive rig.",
+        "Static poster is used for pause, reduced-motion preference, hidden tabs and no-JavaScript fallback."
+      ],
+      "fallback": {
+        "file": "assets/monks/dance/monje-left-dance.gif",
+        "format": "GIF",
+        "bytes": 296096,
+        "sha256": "f5baa5526c7d24d2bc9c480379d5441173350bcbf660700635744833ff4eb2fa"
+      }
+    },
+    "right": {
+      "animation": {
+        "file": "assets/monks/dance/monje-right-dance.webp",
+        "format": "animated WebP",
+        "frames": 9,
+        "frameDurationMs": 280,
+        "loop": 0,
+        "dimensions": [
+          385,
+          418
+        ],
+        "bytes": 157672,
+        "sha256": "dd94a230830699bb4d1abe0fa5f33d189a2e699ad9ba2902d0c04c92532695b2",
+        "totalDurationMs": 2520
+      },
+      "poster": {
+        "file": "assets/monks/dance/monje-right-poster.webp",
+        "format": "WebP",
+        "dimensions": [
+          385,
+          418
+        ],
+        "bytes": 19044,
+        "sha256": "6704baf1958656d890a2c6a48689e1b1eb3619925638e790b2929440441a2865"
+      },
+      "source": "assets/source/monje-right-dance-source.gif",
+      "sourceFormat": "GIF",
+      "notes": [
+        "Generated full-body dance cycle; not a skeletal Rive rig.",
+        "Static poster is used for pause, reduced-motion preference, hidden tabs and no-JavaScript fallback."
+      ],
+      "fallback": {
+        "file": "assets/monks/dance/monje-right-dance.gif",
+        "format": "GIF",
+        "bytes": 317256,
+        "sha256": "640c92aa1c144d11c1037be0f2614807f2d042ff67fe4c5648d8ab7a20ff6dd5"
+      }
+    }
+  }
+}
