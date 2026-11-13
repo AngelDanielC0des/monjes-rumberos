@@ -94,6 +94,9 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # The GitHub App token can push source/assets but not workflow files.
+          # The CI workflow is added directly with the connected GitHub integration after this import.
+          rm -f .github/workflows/ci.yml
           git add -A
           git commit -m "chore: import complete source, assets and responsive QA"
           git push origin HEAD:main
