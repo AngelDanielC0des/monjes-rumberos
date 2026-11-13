@@ -17,7 +17,11 @@
   --page-width: 790px;
 }
 * { box-sizing: border-box; }
+<<<<<<< HEAD
 html { scroll-behavior: smooth; background: var(--ink); }
+=======
+html { scroll-behavior: smooth; scroll-padding-top: 100px; background: var(--ink); }
+>>>>>>> 2448be30dc88d4b58606f2f3cfd1d975d6dfecb6
 body { margin: 0; min-width: 320px; overflow-x: hidden; background: var(--ink); color: var(--paper); font-family: var(--sans); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(53, 35, 68, .17), transparent 46%), linear-gradient(180deg, rgba(8,9,16,.2), rgba(8,9,16,.92)); }
 ::selection { color: #fff; background: rgba(222, 54, 158, .48); }
@@ -227,6 +231,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .back-to-top { display: inline-flex; align-items: center; gap: 9px; color: #b8afbd; font-size: 8px; font-weight: 700; letter-spacing: .17em; }
 .back-to-top span { color: var(--cyan); font-size: 15px; }
 .site-footer small { grid-column: 1 / -1; padding-top: 8px; color: #615c69; font-size: 8px; letter-spacing: .17em; }
+<<<<<<< HEAD
+=======
+[data-reveal] { opacity: 1; transform: none; }
+.reveal-ready [data-reveal] { opacity: 0; transform: translate3d(0,26px,0); transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); }
+.reveal-ready [data-reveal].is-visible { opacity: 1; transform: translate3d(0,0,0); }
+>>>>>>> 2448be30dc88d4b58606f2f3cfd1d975d6dfecb6
 @media (max-width: 1180px) {
   .performers { opacity: .25; }
   .performer--left { left: -7vw; width: clamp(165px, 22vw, 270px); }
@@ -248,12 +258,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .manifesto-lead h2, .section-heading-row h2, .formats-heading h2 { font-size: clamp(42px, 7vw, 58px); }
   .sound-panel { padding: 24px; }
 }
+<<<<<<< HEAD
 @media (max-width: 640px) { .site-header { top: 9px; width: calc(100% - 24px); padding-left: 13px; }.brand-seal { width: 34px; height: 34px; }.brand-name { font-size: 9px; }.brand-name b { font-size: 8px; }.desktop-nav { display: none; }.menu-toggle { display: block; }.performers { position: fixed; inset: 0; height: auto; opacity: .14; }
+=======
+@media (max-width: 640px) { html { scroll-padding-top: 82px; }.site-header { top: 9px; width: calc(100% - 24px); padding-left: 13px; }.brand-seal { width: 34px; height: 34px; }.brand-name { font-size: 9px; }.brand-name b { font-size: 8px; }.desktop-nav { display: none; }.menu-toggle { display: block; }.performers { position: fixed; inset: 0; height: auto; opacity: .14; }
+>>>>>>> 2448be30dc88d4b58606f2f3cfd1d975d6dfecb6
   .performer { bottom: -1vh; }
   .performer--left { left: -9vw; width: clamp(112px, 38vw, 165px); }
   .performer--right { right: -9vw; width: clamp(118px, 39vw, 170px); }.page-shell { width: calc(100% - 38px); }.hero { min-height: 670px; min-height: max(630px, calc(91svh - 58px)); padding: 76px 0 80px; }.hero-eyebrow { gap: 9px; margin-bottom: 29px; font-size: 8px; letter-spacing: .2em; }.eyebrow-line { width: 20px; }.hero-title { font-size: clamp(57px, 15vw, 88px); }.hero-title-second { margin-top: 13px; }.hero-divider { margin-top: 25px; margin-bottom: 20px; }.hero-claim { font-size: clamp(33px, 8vw, 43px); }.hero-copy { max-width: 420px; margin-top: 18px; font-size: 11px; }.hero-actions { flex-direction: column; gap: 16px; margin-top: 26px; }.button { min-height: 49px; }.hero-foot { bottom: 24px; font-size: 7px; letter-spacing: .13em; }.hero-orbit { width: 300px; height: 300px; }.hero-orbit--two { width: 390px; height: 390px; }.section-block { padding: 65px 0 74px; }.section-index { margin-bottom: 27px; font-size: 8px; }.manifesto-layout { grid-template-columns: 1fr; gap: 22px; }.manifesto-lead h2, .section-heading-row h2, .formats-heading h2 { font-size: clamp(42px, 11vw, 58px); }.manifesto-copy { max-width: 500px; }.manifesto-statement { margin-top: 58px; padding: 29px 6px 26px; }.manifesto-statement span:not(.statement-star) { font-size: 8px; letter-spacing: .18em; }.manifesto-statement em { font-size: clamp(48px, 13vw, 68px); }.statement-star { right: 1%; font-size: 14px; }.section-heading-row, .formats-heading { display: block; margin-bottom: 29px; }.section-heading-row > p, .formats-heading > p { max-width: 410px; margin-top: 18px; }.ritual-item { grid-template-columns: 38px 1fr 20px; gap: 12px; padding: 22px 0; }.ritual-number { font-size: 25px; }.ritual-copy h3 { font-size: 24px; }.ritual-copy p { font-size: 10px; }.format-grid { grid-template-columns: 1fr; gap: 10px; }.format-card, .format-card--wide { grid-column: auto; grid-row: auto; min-height: 220px; }.format-card--brand { grid-column: auto; }.format-card--wide { min-height: 270px; }.format-card h3 { font-size: 39px; }.sound-panel { padding: 21px 18px 22px; }.sound-content { grid-template-columns: 1fr; gap: 25px; }.sound-content h2 { font-size: 44px; }.sound-content p { font-size: 10px; }.sound-tags { justify-content: flex-start; }.sound-wave { margin-top: 28px; }.booking-intro h2 { font-size: clamp(47px, 12vw, 64px); }.booking-form { padding: 18px 15px; }.form-grid { grid-template-columns: 1fr; gap: 16px; }.field--full { grid-column: auto; }.form-submit-row { align-items: flex-start; flex-direction: column; gap: 12px; }.form-note { max-width: 100%; }.site-footer { grid-template-columns: 1fr auto; gap: 10px; padding-top: 23px; }.site-footer p { grid-column: 1 / -1; grid-row: 2; text-align: left; }.back-to-top { grid-column: 2; grid-row: 1; }.site-footer small { grid-row: 3; } }
 @media (max-width: 360px) { .hero-title { font-size: 54px; }.hero-eyebrow { font-size: 7px; gap: 6px; }.eyebrow-line { width: 14px; }.page-shell { width: calc(100% - 30px); }.hero-copy { font-size: 10px; }.button { padding-left: 17px; font-size: 10px; }.hero-foot { font-size: 6px; }.section-index { gap: 9px; }.index-rule { width: 28px; } }
+<<<<<<< HEAD
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+=======
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }.reveal-ready [data-reveal] { opacity: 1; transform: none; } }
+>>>>>>> 2448be30dc88d4b58606f2f3cfd1d975d6dfecb6
 
 /* --------------------------------------------------------------------------
    PHASE 2 — Section-specific art direction and responsive scene media
@@ -821,6 +839,7 @@ body::before {
   .performer-settings__action { transition: none; }
   .performer:hover .performer__image { filter: none; }
 }
+<<<<<<< HEAD
 
 
 /* --------------------------------------------------------------------------
@@ -949,3 +968,5 @@ main.page-shell > section:focus { outline: none; }
     transition: none;
   }
 }
+=======
+>>>>>>> 2448be30dc88d4b58606f2f3cfd1d975d6dfecb6
