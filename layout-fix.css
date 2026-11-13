@@ -390,6 +390,7 @@
 .sound.section-block {
   display: block;
   padding: 0;
+  border-top: 0;
 }
 
 .sound-panel {
