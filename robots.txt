@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://monjes-rumberos.vercel.app/sitemap.xml

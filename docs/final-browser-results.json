@@ -1,0 +1,1138 @@
+[
+  {
+    "title": "Monjes Rumberos — El hábito no quita el baile",
+    "width": 2048,
+    "scrollWidth": 2048,
+    "bodyScrollWidth": 2048,
+    "heroHeight": 980,
+    "framePosition": "fixed",
+    "frameOpacity": "0.78",
+    "performerImagesAreDataUri": true,
+    "performerStates": {
+      "left": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      },
+      "right": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      }
+    },
+    "performerImages": [
+      {
+        "width": 360,
+        "height": 402
+      },
+      {
+        "width": 385,
+        "height": 418
+      }
+    ],
+    "desktopNavVisible": true,
+    "menuButtonVisible": false,
+    "revealCount": 5,
+    "images": [
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "eager"
+      },
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      }
+    ],
+    "themeChecks": [
+      {
+        "scene": "hero",
+        "primary": "#6e42d8",
+        "secondary": "#27c9e8"
+      },
+      {
+        "scene": "manifesto",
+        "primary": "#633b83",
+        "secondary": "#c34b98"
+      },
+      {
+        "scene": "ritual",
+        "primary": "#3a57c6",
+        "secondary": "#8c45d1"
+      },
+      {
+        "scene": "formats",
+        "primary": "#c54498",
+        "secondary": "#4858c7"
+      },
+      {
+        "scene": "sound",
+        "primary": "#28bdd7",
+        "secondary": "#8943df"
+      },
+      {
+        "scene": "booking",
+        "primary": "#6f4a81",
+        "secondary": "#378eab"
+      }
+    ],
+    "midpointColor": "#693fb4",
+    "heroTimelineProgress": 77.06057596822245,
+    "nativeTimelineSupported": true,
+    "timelineStart": 52.035749751737846,
+    "timelineLater": 72.88977159880835,
+    "errors": [],
+    "layoutGeometry": {
+      "viewport": 2048,
+      "main": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "hero": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "manifesto": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "ritual": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "formats": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "soundPanel": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "booking": {
+        "x": 0,
+        "width": 2048,
+        "right": 2048
+      },
+      "manifestoContent": {
+        "x": 307.203125,
+        "width": 1433.59375,
+        "right": 1740.796875
+      },
+      "ritualContent": {
+        "x": 307.203125,
+        "width": 1433.59375,
+        "right": 1740.796875
+      },
+      "formatsContent": {
+        "x": 307.203125,
+        "width": 1433.59375,
+        "right": 1740.796875
+      },
+      "bookingContent": {
+        "x": 307.203125,
+        "width": 1433.59375,
+        "right": 1740.796875
+      },
+      "soundContent": {
+        "x": 307.203125,
+        "width": 1433.59375,
+        "right": 1740.796875
+      },
+      "leftPerformer": {
+        "x": -122.875,
+        "width": 420,
+        "right": 297.125
+      },
+      "rightPerformer": {
+        "x": 1734.96875,
+        "width": 440,
+        "right": 2174.96875
+      }
+    }
+  },
+  {
+    "title": "Monjes Rumberos — El hábito no quita el baile",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "bodyScrollWidth": 1440,
+    "heroHeight": 808,
+    "framePosition": "fixed",
+    "frameOpacity": "0.78",
+    "performerImagesAreDataUri": true,
+    "performerStates": {
+      "left": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      },
+      "right": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      }
+    },
+    "performerImages": [
+      {
+        "width": 360,
+        "height": 402
+      },
+      {
+        "width": 385,
+        "height": 418
+      }
+    ],
+    "desktopNavVisible": true,
+    "menuButtonVisible": false,
+    "revealCount": 5,
+    "images": [
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "eager"
+      },
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      }
+    ],
+    "themeChecks": [
+      {
+        "scene": "hero",
+        "primary": "#6e42d8",
+        "secondary": "#27c9e8"
+      },
+      {
+        "scene": "manifesto",
+        "primary": "#633b83",
+        "secondary": "#c34b98"
+      },
+      {
+        "scene": "ritual",
+        "primary": "#3858c7",
+        "secondary": "#8a45d2"
+      },
+      {
+        "scene": "formats",
+        "primary": "#c74397",
+        "secondary": "#4658c7"
+      },
+      {
+        "scene": "sound",
+        "primary": "#13bfd8",
+        "secondary": "#8a42e0"
+      },
+      {
+        "scene": "booking",
+        "primary": "#70427d",
+        "secondary": "#328fa9"
+      }
+    ],
+    "midpointColor": "#693fb4",
+    "heroTimelineProgress": 80.03731343283582,
+    "nativeTimelineSupported": true,
+    "timelineStart": 50.62189054726368,
+    "timelineLater": 76.7412935323383,
+    "errors": [],
+    "layoutGeometry": {
+      "viewport": 1440,
+      "main": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "hero": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "manifesto": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "ritual": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "formats": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "soundPanel": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "booking": {
+        "x": 0,
+        "width": 1440,
+        "right": 1440
+      },
+      "manifestoContent": {
+        "x": 216,
+        "width": 1008,
+        "right": 1224
+      },
+      "ritualContent": {
+        "x": 216,
+        "width": 1008,
+        "right": 1224
+      },
+      "formatsContent": {
+        "x": 216,
+        "width": 1008,
+        "right": 1224
+      },
+      "bookingContent": {
+        "x": 216,
+        "width": 1008,
+        "right": 1224
+      },
+      "soundContent": {
+        "x": 216,
+        "width": 1008,
+        "right": 1224
+      },
+      "leftPerformer": {
+        "x": -72,
+        "width": 244.796875,
+        "right": 172.796875
+      },
+      "rightPerformer": {
+        "x": 1262.875,
+        "width": 252,
+        "right": 1514.875
+      }
+    }
+  },
+  {
+    "title": "Monjes Rumberos — El hábito no quita el baile",
+    "width": 1024,
+    "scrollWidth": 1024,
+    "bodyScrollWidth": 1024,
+    "heroHeight": 690,
+    "framePosition": "fixed",
+    "frameOpacity": "0.18",
+    "performerImagesAreDataUri": true,
+    "performerStates": {
+      "left": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      },
+      "right": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      }
+    },
+    "performerImages": [
+      {
+        "width": 360,
+        "height": 402
+      },
+      {
+        "width": 385,
+        "height": 418
+      }
+    ],
+    "desktopNavVisible": true,
+    "menuButtonVisible": false,
+    "revealCount": 5,
+    "images": [
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "eager"
+      },
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      }
+    ],
+    "themeChecks": [
+      {
+        "scene": "hero",
+        "primary": "#6e42d8",
+        "secondary": "#27c9e8"
+      },
+      {
+        "scene": "manifesto",
+        "primary": "#633b83",
+        "secondary": "#c34b98"
+      },
+      {
+        "scene": "ritual",
+        "primary": "#3858c7",
+        "secondary": "#8a45d2"
+      },
+      {
+        "scene": "formats",
+        "primary": "#c74397",
+        "secondary": "#4658c7"
+      },
+      {
+        "scene": "sound",
+        "primary": "#14bfd8",
+        "secondary": "#8a42e0"
+      },
+      {
+        "scene": "booking",
+        "primary": "#70427d",
+        "secondary": "#328fa9"
+      }
+    ],
+    "midpointColor": "#693fb4",
+    "heroTimelineProgress": 78.93961708394698,
+    "nativeTimelineSupported": true,
+    "timelineStart": 50.220913107511045,
+    "timelineLater": 81.14874815905743,
+    "errors": [],
+    "layoutGeometry": {
+      "viewport": 1024,
+      "main": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "hero": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "manifesto": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "ritual": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "formats": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "soundPanel": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "booking": {
+        "x": 0,
+        "width": 1024,
+        "right": 1024
+      },
+      "manifestoContent": {
+        "x": 40.953125,
+        "width": 942.078125,
+        "right": 983.03125
+      },
+      "ritualContent": {
+        "x": 40.953125,
+        "width": 942.078125,
+        "right": 983.03125
+      },
+      "formatsContent": {
+        "x": 40.953125,
+        "width": 942.078125,
+        "right": 983.03125
+      },
+      "bookingContent": {
+        "x": 40.953125,
+        "width": 942.078125,
+        "right": 983.03125
+      },
+      "soundContent": {
+        "x": 40.953125,
+        "width": 942.078125,
+        "right": 983.03125
+      },
+      "leftPerformer": {
+        "x": -71.671875,
+        "width": 225.265625,
+        "right": 153.59375
+      },
+      "rightPerformer": {
+        "x": 860.15625,
+        "width": 235.515625,
+        "right": 1095.671875
+      }
+    }
+  },
+  {
+    "title": "Monjes Rumberos — El hábito no quita el baile",
+    "width": 768,
+    "scrollWidth": 768,
+    "bodyScrollWidth": 768,
+    "heroHeight": 808,
+    "framePosition": "fixed",
+    "frameOpacity": "0.15",
+    "performerImagesAreDataUri": true,
+    "performerStates": {
+      "left": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      },
+      "right": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      }
+    },
+    "performerImages": [
+      {
+        "width": 360,
+        "height": 402
+      },
+      {
+        "width": 385,
+        "height": 418
+      }
+    ],
+    "desktopNavVisible": true,
+    "menuButtonVisible": false,
+    "revealCount": 5,
+    "images": [
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "eager"
+      },
+      {
+        "width": 1672,
+        "height": 941,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "loading": "lazy"
+      }
+    ],
+    "themeChecks": [
+      {
+        "scene": "hero",
+        "primary": "#6e42d8",
+        "secondary": "#27c9e8"
+      },
+      {
+        "scene": "manifesto",
+        "primary": "#633b83",
+        "secondary": "#c34b98"
+      },
+      {
+        "scene": "ritual",
+        "primary": "#3858c7",
+        "secondary": "#8a45d2"
+      },
+      {
+        "scene": "formats",
+        "primary": "#c74397",
+        "secondary": "#4658c7"
+      },
+      {
+        "scene": "sound",
+        "primary": "#13bfd8",
+        "secondary": "#8a42e0"
+      },
+      {
+        "scene": "booking",
+        "primary": "#70427d",
+        "secondary": "#328fa9"
+      }
+    ],
+    "midpointColor": "#693fb4",
+    "heroTimelineProgress": 76.7412935323383,
+    "nativeTimelineSupported": true,
+    "timelineStart": 51.3681592039801,
+    "timelineLater": 77.48756218905471,
+    "errors": [],
+    "layoutGeometry": {
+      "viewport": 768,
+      "main": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "hero": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "manifesto": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "ritual": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "formats": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "soundPanel": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "booking": {
+        "x": 0,
+        "width": 768,
+        "right": 768
+      },
+      "manifestoContent": {
+        "x": 30.71875,
+        "width": 706.546875,
+        "right": 737.265625
+      },
+      "ritualContent": {
+        "x": 30.71875,
+        "width": 706.546875,
+        "right": 737.265625
+      },
+      "formatsContent": {
+        "x": 30.71875,
+        "width": 706.546875,
+        "right": 737.265625
+      },
+      "bookingContent": {
+        "x": 30.71875,
+        "width": 706.546875,
+        "right": 737.265625
+      },
+      "soundContent": {
+        "x": 30.71875,
+        "width": 706.546875,
+        "right": 737.265625
+      },
+      "leftPerformer": {
+        "x": -61.4375,
+        "width": 168.953125,
+        "right": 107.515625
+      },
+      "rightPerformer": {
+        "x": 652.8125,
+        "width": 176.625,
+        "right": 829.4375
+      }
+    }
+  },
+  {
+    "title": "Monjes Rumberos — El hábito no quita el baile",
+    "width": 390,
+    "scrollWidth": 390,
+    "bodyScrollWidth": 390,
+    "heroHeight": 710,
+    "framePosition": "fixed",
+    "frameOpacity": "0.13",
+    "performerImagesAreDataUri": true,
+    "performerStates": {
+      "left": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      },
+      "right": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      }
+    },
+    "performerImages": [
+      {
+        "width": 360,
+        "height": 402
+      },
+      {
+        "width": 385,
+        "height": 418
+      }
+    ],
+    "desktopNavVisible": false,
+    "menuButtonVisible": true,
+    "revealCount": 5,
+    "images": [
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "eager"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      }
+    ],
+    "themeChecks": [
+      {
+        "scene": "hero",
+        "primary": "#6e42d8",
+        "secondary": "#27c9e8"
+      },
+      {
+        "scene": "manifesto",
+        "primary": "#633b83",
+        "secondary": "#c34b98"
+      },
+      {
+        "scene": "ritual",
+        "primary": "#3858c7",
+        "secondary": "#8a45d2"
+      },
+      {
+        "scene": "formats",
+        "primary": "#c74397",
+        "secondary": "#4658c7"
+      },
+      {
+        "scene": "sound",
+        "primary": "#13bfd8",
+        "secondary": "#8a42e0"
+      },
+      {
+        "scene": "booking",
+        "primary": "#70427d",
+        "secondary": "#328fa9"
+      }
+    ],
+    "midpointColor": "#693fb4",
+    "heroTimelineProgress": 78.19127481159113,
+    "nativeTimelineSupported": true,
+    "timelineStart": 52.30867211548669,
+    "timelineLater": 80.84067508757033,
+    "errors": [],
+    "layoutGeometry": {
+      "viewport": 390,
+      "main": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "hero": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "manifesto": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "ritual": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "formats": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "soundPanel": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "booking": {
+        "x": 0,
+        "width": 390,
+        "right": 390
+      },
+      "manifestoContent": {
+        "x": 18,
+        "width": 354,
+        "right": 372
+      },
+      "ritualContent": {
+        "x": 18,
+        "width": 354,
+        "right": 372
+      },
+      "formatsContent": {
+        "x": 18,
+        "width": 354,
+        "right": 372
+      },
+      "bookingContent": {
+        "x": 18,
+        "width": 354,
+        "right": 372
+      },
+      "soundContent": {
+        "x": 18,
+        "width": 354,
+        "right": 372
+      },
+      "leftPerformer": {
+        "x": -35.09375,
+        "width": 148.1875,
+        "right": 113.09375
+      },
+      "rightPerformer": {
+        "x": 273,
+        "width": 152.09375,
+        "right": 425.09375
+      }
+    }
+  },
+  {
+    "title": "Monjes Rumberos — El hábito no quita el baile",
+    "width": 320,
+    "scrollWidth": 320,
+    "bodyScrollWidth": 320,
+    "heroHeight": 684,
+    "framePosition": "fixed",
+    "frameOpacity": "0.13",
+    "performerImagesAreDataUri": true,
+    "performerStates": {
+      "left": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      },
+      "right": {
+        "state": "dancing",
+        "effectiveState": "dancing",
+        "visible": true
+      }
+    },
+    "performerImages": [
+      {
+        "width": 360,
+        "height": 402
+      },
+      {
+        "width": 385,
+        "height": 418
+      }
+    ],
+    "desktopNavVisible": false,
+    "menuButtonVisible": true,
+    "revealCount": 5,
+    "images": [
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "eager"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      },
+      {
+        "width": 1080,
+        "height": 1920,
+        "loading": "lazy"
+      }
+    ],
+    "themeChecks": [
+      {
+        "scene": "hero",
+        "primary": "#6e42d8",
+        "secondary": "#27c9e8"
+      },
+      {
+        "scene": "manifesto",
+        "primary": "#633b83",
+        "secondary": "#c34b98"
+      },
+      {
+        "scene": "ritual",
+        "primary": "#3958c6",
+        "secondary": "#8b45d1"
+      },
+      {
+        "scene": "formats",
+        "primary": "#c74397",
+        "secondary": "#4658c7"
+      },
+      {
+        "scene": "sound",
+        "primary": "#13bfd8",
+        "secondary": "#8a42e0"
+      },
+      {
+        "scene": "booking",
+        "primary": "#70427d",
+        "secondary": "#328fa9"
+      }
+    ],
+    "midpointColor": "#693fb4",
+    "heroTimelineProgress": 81.5727904459266,
+    "nativeTimelineSupported": true,
+    "timelineStart": 49.61413555889234,
+    "timelineLater": 80.90232915459022,
+    "errors": [],
+    "layoutGeometry": {
+      "viewport": 320,
+      "main": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "hero": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "manifesto": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "ritual": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "formats": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "soundPanel": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "booking": {
+        "x": 0,
+        "width": 320,
+        "right": 320
+      },
+      "manifestoContent": {
+        "x": 18,
+        "width": 284,
+        "right": 302
+      },
+      "ritualContent": {
+        "x": 18,
+        "width": 284,
+        "right": 302
+      },
+      "formatsContent": {
+        "x": 18,
+        "width": 284,
+        "right": 302
+      },
+      "bookingContent": {
+        "x": 18,
+        "width": 284,
+        "right": 302
+      },
+      "soundContent": {
+        "x": 18,
+        "width": 284,
+        "right": 302
+      },
+      "leftPerformer": {
+        "x": -80,
+        "width": 128,
+        "right": 48
+      },
+      "rightPerformer": {
+        "x": 268.8125,
+        "width": 131.1875,
+        "right": 400
+      }
+    }
+  },
+  {
+    "formStatus": "Solicitud copiada. Ya puedes pegarla en tu canal habitual de contacto.",
+    "reducedMotionDuration": "0s",
+    "reducedMotionPalette": "#633b83"
+  },
+  {
+    "fallbackSourceCheck": true
+  }
+]

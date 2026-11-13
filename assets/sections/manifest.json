@@ -1,0 +1,136 @@
+{
+  "project": "Monjes Rumberos",
+  "phase": 2,
+  "format": "WebP",
+  "scenes": {
+    "hero": {
+      "desktop": {
+        "file": "/assets/sections/01-hero-desktop.2ccc50d3bd.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 178748,
+        "sha256": "2ccc50d3bda0cbce3b8107d79cde0c843f5e217bcf15dec287bba82c6e1cf547"
+      },
+      "mobile": {
+        "file": "/assets/sections/01-hero-mobile.981a223b05.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 181488,
+        "sha256": "981a223b053f69894f2641b2fc7b423cdefa1c87d9da91ba1b68d635a87a1ccb"
+      }
+    },
+    "manifesto": {
+      "desktop": {
+        "file": "/assets/sections/02-manifiesto-desktop.c355066703.webp",
+        "width": 1672,
+        "height": 941,
+        "bytes": 257040,
+        "sha256": "c355066703a8fe8a6b3e6560f27d70acefbe8ad19ffd4cd0874159debfc75456"
+      },
+      "mobile": {
+        "file": "/assets/sections/02-manifiesto-mobile.409de80b58.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 172760,
+        "sha256": "409de80b58b9a19cf22e21755ae0d88502334a240bc0e044c79abf9f8daf7174"
+      }
+    },
+    "ritual": {
+      "desktop": {
+        "file": "/assets/sections/03-ritual-desktop.56fab5a71f.webp",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 247328,
+        "sha256": "56fab5a71ff4ba7084576dc58f81930d0fe6729180505258e0de81fd803beb16"
+      },
+      "mobile": {
+        "file": "/assets/sections/03-ritual-mobile.75c68ab195.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 179476,
+        "sha256": "75c68ab195afd343a67881b75eb8750c34812f57b20981714366d2f6b3071284"
+      }
+    },
+    "clubs": {
+      "desktop": {
+        "file": "/assets/sections/04a-formatos-clubs-desktop.51866883e1.webp",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 201158,
+        "sha256": "51866883e12f1c371065a3ab1160171c07d3da88f97cf4639bd916ca48a0a33d"
+      },
+      "mobile": {
+        "file": "/assets/sections/04a-formatos-clubs-mobile.4ef04d4ffa.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 157348,
+        "sha256": "4ef04d4ffa836ffa511e94ad1ee5d2511c5458a42e4d7d0f667109fe05fedd82"
+      }
+    },
+    "private": {
+      "desktop": {
+        "file": "/assets/sections/04b-formatos-privados-desktop.f698f2f114.webp",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 306812,
+        "sha256": "f698f2f11438f26cb2d6dd9c41da4ffc26fda0a6e10c389b94a35124253b2fb8"
+      },
+      "mobile": {
+        "file": "/assets/sections/04b-formatos-privados-mobile.84687dc3ee.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 258942,
+        "sha256": "84687dc3ee9f78caa0ba322cb932b39960ef8da129abd3080b73736068f3539b"
+      },
+      "description": "Salón privado de inspiración clásica con arcos, cortinajes de terciopelo, lámparas de cristal, suelo reflectante y los dos monjes en primer plano."
+    },
+    "festival": {
+      "desktop": {
+        "file": "/assets/sections/04c-formatos-festivales-desktop.a5b8a1a9d6.webp",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 282234,
+        "sha256": "a5b8a1a9d6953bb73b15982c2e81692a958b493f8733f21f38b622325aef8c18"
+      },
+      "mobile": {
+        "file": "/assets/sections/04c-formatos-festivales-mobile.a954a0c93b.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 196162,
+        "sha256": "a954a0c93bb15443a4891f6c902cb803685c2cefeab9f0db3a15304a941148c3"
+      }
+    },
+    "sound": {
+      "desktop": {
+        "file": "/assets/sections/05-pulso-electronico-desktop.25510c8540.webp",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 233154,
+        "sha256": "25510c854070390706f151429078424e6939284fcecf27d5a81edab129c26d44"
+      },
+      "mobile": {
+        "file": "/assets/sections/05-pulso-electronico-mobile.3da5da15c2.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 191994,
+        "sha256": "3da5da15c207566eb1661d78ee904541829bf4a2f03c976c68d6bfa9bfd7acd8"
+      }
+    },
+    "booking": {
+      "desktop": {
+        "file": "/assets/sections/06-booking-desktop.cc21160235.webp",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 85072,
+        "sha256": "cc2116023519233389b53a68a62ea9e47b6bb0be0e742246444c0e172083b4a5"
+      },
+      "mobile": {
+        "file": "/assets/sections/06-booking-mobile.c509fe9dc5.webp",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 55580,
+        "sha256": "c509fe9dc5c6d461f7d1cce34c22f2fdf4c91c345288c903dc5353bb18f1279c"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "monjes-rumberos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Landing cinematográfica responsive para Monjes Rumberos.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "bash scripts/build-static.sh",
+    "test:smoke": "node tests/smoke-test.mjs",
+    "test:browser": "python3 -u tests/browser-check.py",
+    "test": "npm run test:smoke && npm run test:browser",
+    "check": "node --check app.js && node --check scroll-scenes.js && node --check performer-motion.js && node --check performer-settings.js"
+  }
+}

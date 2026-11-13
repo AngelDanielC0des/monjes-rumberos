@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080910">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://monjes-rumberos.vercel.app/">
+  <meta name="color-scheme" content="dark">
+  <title>Monjes Rumberos — El hábito no quita el baile</title>
+  <meta name="description" content="Monjes Rumberos: dos figuras, una pista y una devoción absoluta por la noche. Apariciones y experiencias para clubs, eventos privados y noches especiales en Madrid.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://monjes-rumberos.vercel.app/">
+  <meta property="og:title" content="Monjes Rumberos — El hábito no quita el baile">
+  <meta property="og:description" content="Dos figuras. Una pista. Una noche que se recuerda. Descubre el ritual de Monjes Rumberos.">
+  <meta property="og:image" content="https://monjes-rumberos.vercel.app/assets/images/monjes-frame.webp">
+  <meta property="og:image:alt" content="Dos monjes de túnica blanca, cruces bordadas y máscaras LED enmarcan una noche de club.">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Monjes Rumberos — El hábito no quita el baile">
+  <meta name="twitter:description" content="Dos figuras. Una pista. Una noche que se recuerda.">
+  <meta name="twitter:image" content="https://monjes-rumberos.vercel.app/assets/images/monjes-frame.webp">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="/assets/sections/01-hero-desktop.2ccc50d3bd.webp" media="(min-width: 641px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/assets/sections/01-hero-mobile.981a223b05.webp" media="(max-width: 640px)" fetchpriority="high">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/layout-fix.css">
+  <script src="/scroll-scenes.js" defer></script>
+  <script src="/section-navigation.js" defer></script>
+  <script src="/performer-motion.js" defer></script>
+  <script src="/performer-settings.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="ambient-lights" aria-hidden="true">
+    <span class="corner-light corner-light--tl"></span>
+    <span class="corner-light corner-light--tr"></span>
+    <span class="corner-light corner-light--bl"></span>
+    <span class="corner-light corner-light--br"></span>
+    <span class="ambient-grain"></span>
+  </div>
+  <div class="performers" role="group" aria-label="Personajes interactivos de Monjes Rumberos">
+    <button class="performer performer--left" type="button" data-performer="left" data-state="dancing"
+      aria-label="Abrir ajustes de los monjes desde el personaje izquierdo" aria-controls="performer-settings" aria-expanded="false">
+      <img
+        class="performer__image"
+        src="/assets/monks/dance/monje-left-poster.webp"
+        data-animation-src="/assets/monks/dance/monje-left-dance.webp"
+        data-animation-fallback-src="/assets/monks/dance/monje-left-dance.gif"
+        data-poster-src="/assets/monks/dance/monje-left-poster.webp"
+        alt=""
+        aria-hidden="true"
+        width="360"
+        height="402"
+        loading="eager"
+        decoding="async"
+        fetchpriority="low">
+    </button>
+    <button class="performer performer--right" type="button" data-performer="right" data-state="dancing"
+      aria-label="Abrir ajustes de los monjes desde el personaje derecho" aria-controls="performer-settings" aria-expanded="false">
+      <img
+        class="performer__image"
+        src="/assets/monks/dance/monje-right-poster.webp"
+        data-animation-src="/assets/monks/dance/monje-right-dance.webp"
+        data-animation-fallback-src="/assets/monks/dance/monje-right-dance.gif"
+        data-poster-src="/assets/monks/dance/monje-right-poster.webp"
+        alt=""
+        aria-hidden="true"
+        width="385"
+        height="418"
+        loading="eager"
+        decoding="async"
+        fetchpriority="low">
+    </button>
+  </div>
+
+  <button class="performer-settings-toggle" type="button" aria-label="Abrir ajustes de los monjes"
+    aria-controls="performer-settings" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 7h9m4 0h3M4 17h3m4 0h9M13 4v6M7 14v6" />
+      <circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" />
+    </svg>
+  </button>
+
+  <aside class="performer-settings" id="performer-settings" role="dialog" aria-modal="false"
+    aria-labelledby="performer-settings-title" aria-describedby="performer-settings-description" hidden>
+    <div class="performer-settings__topline">
+      <span class="performer-settings__eyebrow">CONTROL DE PISTA</span>
+      <button class="performer-settings__close" type="button" aria-label="Cerrar ajustes de los monjes">×</button>
+    </div>
+    <h2 id="performer-settings-title">Los monjes, a tu ritmo.</h2>
+    <p id="performer-settings-description">Decide si siguen bailando o si dejan descansar la pista.</p>
+    <div class="performer-settings__status" id="performer-settings-status" role="status" aria-live="polite">
+      <span class="performer-settings__status-dot" aria-hidden="true"></span>
+      <span>Dos monjes en pista · Bailando</span>
+    </div>
+    <div class="performer-settings__actions">
+      <button class="performer-settings__action performer-settings__action--primary" type="button" data-performer-action="dance">
+        <span class="performer-settings__action-icon" aria-hidden="true">Ⅱ</span>
+        <span data-performer-action-label>Pausar baile</span>
+      </button>
+      <button class="performer-settings__action" type="button" data-performer-action="visibility">
+        <span class="performer-settings__action-icon" aria-hidden="true">◉</span>
+        <span data-performer-visibility-label>Ocultar monjes</span>
+      </button>
+    </div>
+    <p class="performer-settings__footnote">Puedes volver a abrir este panel desde el botón de ajustes, aunque los monjes estén ocultos.</p>
+  </aside>
+
+  <header class="site-header">
+    <a class="brand-lockup" href="#inicio" aria-label="Monjes Rumberos, volver al inicio">
+      <span class="brand-seal" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M7 23c1.4-8 4.7-13 9-17 4.3 4 7.6 9 9 17-3 4-6 6-9 6s-6-2-9-6Z" stroke="currentColor" stroke-width="1.25"/><path d="M12 22v-6m4 6v-9m4 9v-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 2v3M3 9l3 1M29 9l-3 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+      <span class="brand-name">MONJES <b>RUMBEROS</b></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Navegación principal">
+      <a href="#manifiesto">Manifiesto</a>
+      <a href="#ritual">El ritual</a>
+      <a href="#formatos">Formatos</a>
+      <a href="#sonido">El sonido</a>
+      <a class="nav-booking" href="#booking">Booking <span aria-hidden="true">↗</span></a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </header>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Navegación móvil" hidden>
+    <a href="#manifiesto">Manifiesto <span>01</span></a>
+    <a href="#ritual">El ritual <span>02</span></a>
+    <a href="#formatos">Formatos <span>03</span></a>
+    <a href="#sonido">El sonido <span>04</span></a>
+    <a href="#booking">Booking <span>05</span></a>
+  </nav>
+  <nav class="section-dots" aria-label="Navegación por secciones">
+    <a class="section-dot" href="#inicio" data-label="Inicio" aria-label="Ir a la sección Inicio"></a>
+    <a class="section-dot" href="#manifiesto" data-label="Manifiesto" aria-label="Ir a la sección Manifiesto"></a>
+    <a class="section-dot" href="#ritual" data-label="El ritual" aria-label="Ir a la sección El ritual"></a>
+    <a class="section-dot" href="#formatos" data-label="Formatos" aria-label="Ir a la sección Formatos"></a>
+    <a class="section-dot" href="#sonido" data-label="El sonido" aria-label="Ir a la sección El sonido"></a>
+    <a class="section-dot" href="#booking" data-label="Booking" aria-label="Ir a la sección Booking"></a>
+  </nav>
+
+  <main id="contenido" class="page-shell">
+    <section class="hero section-scene scene--hero" id="inicio" aria-labelledby="hero-title" data-scene="hero">
+      <div class="scene-media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 640px)" srcset="/assets/sections/01-hero-mobile.981a223b05.webp">
+          <img src="/assets/sections/01-hero-desktop.2ccc50d3bd.webp" alt="" width="1920" height="1080" decoding="async" loading="eager" fetchpriority="high">
+          </picture>
+        </div>
+        <span class="scene-overlay" aria-hidden="true"></span>
+      <div class="hero-inner">
+        <p class="eyebrow hero-eyebrow"><span class="eyebrow-line"></span> MADRID <i>·</i> NOCHES <i>·</i> RITUAL <span class="eyebrow-line"></span></p>
+        <h1 class="hero-title" id="hero-title"><span>MONJES</span><span class="hero-title-second">RUMBEROS<span class="title-spark" aria-hidden="true">✳</span></span></h1>
+        <div class="hero-divider" aria-hidden="true"><span></span><b>✳</b><span></span></div>
+        <p class="hero-claim">El hábito no quita <em>el baile.</em></p>
+        <p class="hero-copy">Dos figuras, una pista y una devoción absoluta por la noche. Máscaras de luz, túnicas en movimiento y una presencia que transforma el ambiente sin pedir permiso.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#booking">Trae el ritual a tu noche <span class="button-icon" aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#manifiesto">Conoce el manifiesto <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="hero-foot" aria-hidden="true"><span>01 — 06</span><span class="hero-foot-line"></span><span>DESLIZA PARA ENTRAR</span></div>
+      <span class="hero-orbit hero-orbit--one" aria-hidden="true"></span>
+      <span class="hero-orbit hero-orbit--two" aria-hidden="true"></span>
+    </section>
+
+    <section class="manifesto section-block section-scene scene--manifesto" id="manifiesto" aria-labelledby="manifesto-title" data-scene="manifesto">
+      <div class="scene-media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 640px)" srcset="/assets/sections/02-manifiesto-mobile.409de80b58.webp">
+          <img src="/assets/sections/02-manifiesto-desktop.c355066703.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+          </picture>
+        </div>
+        <span class="scene-overlay" aria-hidden="true"></span>
+<div class="section-inner">
+      <div class="section-index"><span>01</span><span class="index-rule"></span><span>EL MANIFIESTO</span></div>
+      <div class="manifesto-layout">
+        <div class="manifesto-lead">
+          <h2 id="manifesto-title">No venimos a mirar la pista. <em>Venimos a encenderla.</em></h2>
+        </div>
+        <div class="manifesto-copy">
+          <p>No somos un espectáculo que se queda al margen. Somos contraste, misterio y movimiento. Llegamos en silencio, se encienden las máscaras y la noche empieza a contar otra historia.</p>
+          <p>Entre luces bajas, bajos profundos y cuerpos en movimiento, convertimos un instante cualquiera en una imagen que se queda contigo.</p>
+          <span class="signature-line"><i></i> UNA DEVOCIÓN POR LA NOCHE</span>
+        </div>
+      </div>
+
+            <div class="manifesto-statement" aria-label="La noche no se explica. Se baila.">
+        <span>LA NOCHE NO SE EXPLICA.</span>
+        <em>SE BAILA.</em>
+        <span class="statement-star" aria-hidden="true">✳</span>
+      </div>
+      </div>
+    </section>
+
+    <section class="ritual section-block section-scene scene--ritual" id="ritual" aria-labelledby="ritual-title" data-scene="ritual">
+      <div class="scene-media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 640px)" srcset="/assets/sections/03-ritual-mobile.75c68ab195.webp">
+          <img src="/assets/sections/03-ritual-desktop.56fab5a71f.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+          </picture>
+        </div>
+        <span class="scene-overlay" aria-hidden="true"></span>
+<div class="section-inner">
+      <div class="section-index"><span>02</span><span class="index-rule"></span><span>EL RITUAL</span></div>
+      <div class="section-heading-row">
+        <h2 id="ritual-title">Tres momentos.<br><em>Una sola energía.</em></h2>
+        <p>La aparición tiene su propio lenguaje. No hace falta explicarlo cuando la pista lo entiende.</p>
+      </div>
+
+            <div class="ritual-list">
+        <article class="ritual-item">
+          <span class="ritual-number">I</span>
+          <div class="ritual-copy"><h3>La llegada</h3><p>Una silueta inesperada. Túnicas blancas, rostros de luz y una presencia que despierta la curiosidad.</p></div>
+          <span class="ritual-mark" aria-hidden="true">↗</span>
+        </article>
+        <article class="ritual-item">
+          <span class="ritual-number">II</span>
+          <div class="ritual-copy"><h3>La conexión</h3><p>El misterio se convierte en complicidad. El baile rompe la distancia y la sala empieza a formar parte del ritual.</p></div>
+          <span class="ritual-mark" aria-hidden="true">✳</span>
+        </article>
+        <article class="ritual-item">
+          <span class="ritual-number">III</span>
+          <div class="ritual-copy"><h3>La memoria</h3><p>Una imagen distinta, un momento compartido y esa sensación de haber vivido algo que no estaba en el guion.</p></div>
+          <span class="ritual-mark" aria-hidden="true">∞</span>
+        </article>
+      </div>
+      </div>
+    </section>
+
+    <section class="formats section-block scene--formats" id="formatos" aria-labelledby="formats-title" data-scene="formats">
+<div class="section-inner">
+      <div class="section-index"><span>03</span><span class="index-rule"></span><span>DONDE SUCEDE</span></div>
+      <div class="formats-heading">
+        <h2 id="formats-title">La noche cambia.<br><em>El ritual se adapta.</em></h2>
+        <p>Una presencia visual pensada para sumar carácter a distintos escenarios, sin robarle el protagonismo a la celebración.</p>
+      </div>
+
+            <div class="format-grid">
+        <article class="format-card format-card--wide scene--clubs" data-scene="clubs">
+          <div class="format-card__media" aria-hidden="true">
+            <picture>
+              <source media="(max-width: 640px)" srcset="/assets/sections/04a-formatos-clubs-mobile.4ef04d4ffa.webp">
+              <img src="/assets/sections/04a-formatos-clubs-desktop.51866883e1.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+            </picture>
+          </div>
+          <span class="format-card__overlay" aria-hidden="true"></span>
+          <span class="format-no">01 / CLUB CULTURE</span>
+          <div class="format-card-bottom"><h3>Salas <em>&</em> clubs</h3><p>Una aparición que dialoga con la música, la iluminación y el pulso de la pista.</p></div>
+          <span class="format-symbol" aria-hidden="true">◉</span>
+        </article>
+        <article class="format-card format-card--private scene--private" data-scene="private">
+          <div class="format-card__media" aria-hidden="true">
+            <picture>
+              <source media="(max-width: 640px)" srcset="/assets/sections/04b-formatos-privados-mobile.84687dc3ee.webp">
+              <img src="/assets/sections/04b-formatos-privados-desktop.f698f2f114.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+            </picture>
+          </div>
+          <span class="format-card__overlay" aria-hidden="true"></span>
+          <span class="format-no">02 / PRIVATE MOMENTS</span>
+          <div class="format-card-bottom"><h3>Eventos<br><em>privados</em></h3><p>Un giro inesperado para celebraciones que quieren salirse de lo de siempre.</p></div>
+          <span class="format-symbol" aria-hidden="true">✳</span>
+        </article>
+        <article class="format-card format-card--brand scene--festival" data-scene="festival">
+          <div class="format-card__media" aria-hidden="true">
+            <picture>
+              <source media="(max-width: 640px)" srcset="/assets/sections/04c-formatos-festivales-mobile.a954a0c93b.webp">
+              <img src="/assets/sections/04c-formatos-festivales-desktop.a5b8a1a9d6.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+            </picture>
+          </div>
+          <span class="format-card__overlay" aria-hidden="true"></span>
+          <span class="format-no">03 / SPECIAL NIGHTS</span>
+          <div class="format-card-bottom"><h3>Festivales <em>&</em> experiencias</h3><p>Una identidad reconocible para noches especiales, encuentros y activaciones.</p></div>
+          <span class="format-symbol" aria-hidden="true">⌁</span>
+        </article>
+      </div>
+      </div>
+    </section>
+
+    <section class="sound section-block" id="sonido" aria-labelledby="sound-title" data-scene="sound">
+      <div class="sound-panel section-scene scene--sound">
+        <div class="scene-media" aria-hidden="true">
+          <picture>
+            <source media="(max-width: 640px)" srcset="/assets/sections/05-pulso-electronico-mobile.3da5da15c2.webp">
+            <img src="/assets/sections/05-pulso-electronico-desktop.25510c8540.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+          </picture>
+        </div>
+        <span class="scene-overlay" aria-hidden="true"></span>
+        <div class="sound-panel__inner">
+        <div class="section-index section-index--inside"><span>04</span><span class="index-rule"></span><span>EL SONIDO</span></div>
+        <div class="sound-content">
+          <div>
+            <h2 id="sound-title">Del pulso electrónico <em>al ritmo que pide el cuerpo.</em></h2>
+            <p>House, electrónica y ecos de ritmos latinos conviven en una cultura de club abierta, física y sin etiquetas rígidas. La música marca el camino; la energía hace el resto.</p>
+          </div>
+          <div class="sound-tags" aria-label="Universo musical">
+            <span>HOUSE</span><span>ELECTRÓNICA</span><span>RITMOS LATINOS</span><span>CLUB CULTURE</span>
+          </div>
+        </div>
+        <div class="sound-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="booking section-block section-scene scene--booking" id="booking" aria-labelledby="booking-title" data-scene="booking">
+      <div class="scene-media" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 640px)" srcset="/assets/sections/06-booking-mobile.c509fe9dc5.webp">
+          <img src="/assets/sections/06-booking-desktop.cc21160235.webp" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+          </picture>
+        </div>
+        <span class="scene-overlay" aria-hidden="true"></span>
+<div class="section-inner">
+      <div class="section-index"><span>05</span><span class="index-rule"></span><span>BOOKING / MADRID</span></div>
+      <div class="booking-intro">
+        <p class="eyebrow">LA PRÓXIMA NOCHE EMPIEZA AQUÍ</p>
+        <h2 id="booking-title">¿Y si esta vez <em>la noche habla de vosotros?</em></h2>
+        <p>Cuéntanos qué estás preparando. Prepara una solicitud con los detalles básicos y compártela con el equipo por vuestro canal habitual de contacto.</p>
+      </div>
+
+            <form class="booking-form" id="booking-form">
+        <div class="form-grid">
+          <label class="field"><span>Tu nombre</span><input name="name" autocomplete="name" placeholder="¿Cómo te llamas?" maxlength="80"></label>
+          <label class="field"><span>Correo de contacto</span><input name="email" type="email" autocomplete="email" placeholder="nombre@correo.com" maxlength="120"></label>
+          <label class="field"><span>Tipo de evento</span><select name="eventType" required><option value="" selected disabled>Selecciona un formato</option><option>Club / sala</option><option>Evento privado</option><option>Festival / experiencia</option><option>Otro formato</option></select></label>
+          <label class="field"><span>Fecha aproximada</span><input name="date" type="date"></label>
+          <label class="field field--full"><span>Cuéntanos el plan</span><textarea name="message" rows="3" maxlength="1200" placeholder="Lugar, horario, ambiente, aforo aproximado…" required></textarea></label>
+        </div>
+        <div class="form-submit-row">
+          <button class="button button-primary form-submit" type="submit">Copiar solicitud <span class="button-icon" aria-hidden="true">↗</span></button>
+          <p class="form-note">La información se prepara en tu navegador. No se envía ni se almacena en esta web.</p>
+        </div>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-brand" href="#inicio">MONJES <em>RUMBEROS</em></a>
+    <p>Madrid · Cultura de club · El hábito no quita el baile.</p>
+    <a class="back-to-top" href="#inicio">VOLVER ARRIBA <span aria-hidden="true">↑</span></a>
+    <small>© <span id="year">2026</span> MONJES RUMBEROS</small>
+  </footer>
+</body>
+</html>
