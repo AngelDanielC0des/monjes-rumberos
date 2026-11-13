@@ -824,3 +824,14 @@ body::before {
   .performer-settings__action { transition: none; }
   .performer:hover .performer__image { filter: none; }
 }
+
+/* Fase 3: estado de la sección actual en navegación principal y móvil. */
+.desktop-nav a[aria-current="location"],
+.mobile-menu a[aria-current="location"] {
+  color: #fff;
+}
+.desktop-nav a[aria-current="location"]:not(.nav-booking) {
+  text-decoration: underline;
+  text-decoration-color: var(--cyan);
+  text-underline-offset: 7px;
+}
