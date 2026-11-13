@@ -85,23 +85,55 @@ with sync_playwright() as p:
             }""",
             timeout=12000,
         )
-        # Check that the native view timeline advances with actual scrolling.
-        page.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })")
-        page.wait_for_timeout(70)
-        native_timeline_supported = page.evaluate("CSS.supports('view-timeline-name: --scene-view') && CSS.supports('animation-timeline: --scene-view') && CSS.supports('animation-range: entry 0% exit 100%')")
-        timeline_start = page.evaluate("""() => {
-          const animation = document.querySelector('#inicio .scene-media img').getAnimations()[0];
-          return animation && animation.currentTime ? animation.currentTime.value : null;
+        # Verify the rendered scroll-driven transform, not a potentially stale
+        # animation.currentTime snapshot. Force instant scrolling and wait for the
+        # actual scroll position before reading the computed style.
+        page.evaluate("""() => {
+          document.documentElement.style.scrollBehavior = 'auto';
+          window.scrollTo(0, 0);
         }""")
-        page.evaluate("window.scrollTo({ top: 420, behavior: 'instant' })")
-        page.wait_for_timeout(150)
+        page.wait_for_function("window.scrollY === 0", timeout=2000)
+        page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
+        native_timeline_supported = page.evaluate("CSS.supports('view-timeline-name: --scene-view') && CSS.supports('animation-timeline: --scene-view') && CSS.supports('animation-range: entry 0% exit 100%)'")
+        timeline_start = page.evaluate("""() => {
+          const image = document.querySelector('#inicio .scene-media img');
+          const animation = [...image.getAnimations()].find(item =>
+            String(item.animationName || '').startsWith('scene-scroll-depth')
+          );
+          return {
+            transform: getComputedStyle(image).transform,
+            animationName: animation ? animation.animationName : null,
+            progress: animation ? animation.effect.getComputedTiming().progress : null
+          };
+        }""")
+        max_scroll = page.evaluate("Math.max(0, document.documentElement.scrollHeight - window.innerHeight)")
+        target_scroll = min(420, max_scroll)
+        assert target_scroll > 0, {'maxScroll': max_scroll, 'width': width}
+        page.evaluate("(target) => window.scrollTo(0, target)", target_scroll)
+        page.wait_for_function("(target) => Math.abs(window.scrollY - target) < 2", target_scroll, timeout=2500)
+        page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
         timeline_later = page.evaluate("""() => {
-          const animation = document.querySelector('#inicio .scene-media img').getAnimations()[0];
-          return animation && animation.currentTime ? animation.currentTime.value : null;
+          const image = document.querySelector('#inicio .scene-media img');
+          const animation = [...image.getAnimations()].find(item =>
+            String(item.animationName || '').startsWith('scene-scroll-depth')
+          );
+          return {
+            transform: getComputedStyle(image).transform,
+            animationName: animation ? animation.animationName : null,
+            progress: animation ? animation.effect.getComputedTiming().progress : null
+          };
         }""")
         if native_timeline_supported:
-            assert timeline_start is not None and timeline_later is not None and abs(timeline_later - timeline_start) > .1, {
-                'timelineStart': timeline_start, 'timelineLater': timeline_later, 'width': width
+            assert (
+                timeline_start['animationName'] is not None
+                and timeline_later['animationName'] is not None
+                and timeline_start['transform'] != timeline_later['transform']
+            ), {
+                'timelineStart': timeline_start,
+                'timelineLater': timeline_later,
+                'scrollY': page.evaluate('window.scrollY'),
+                'targetScroll': target_scroll,
+                'width': width,
             }
         else:
             assert page.evaluate("document.documentElement.classList.contains('no-scroll-timeline') && document.querySelector('#inicio').classList.contains('scene-in-view')"), 'IntersectionObserver fallback did not activate'
