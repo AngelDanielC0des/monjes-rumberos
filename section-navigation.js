@@ -82,9 +82,16 @@
     ));
   }
 
-  function sectionNeedsNativeScroll(section) {
+  function canAdvanceFromSection(section, direction) {
     const rect = section.getBoundingClientRect();
-    return rect.height > window.innerHeight + 2;
+    if (rect.height <= window.innerHeight + 2) return true;
+
+    // Long sections keep native scrolling until the relevant edge is reached.
+    // A small tolerance avoids trapping the keyboard on fractional CSS pixels.
+    const edgeTolerance = 10;
+    return direction > 0
+      ? rect.bottom <= window.innerHeight + edgeTolerance
+      : rect.top >= -edgeTolerance;
   }
 
   function navigateTo(index, updateHistory) {
@@ -127,7 +134,7 @@
     else return;
 
     const current = sections[activeIndex];
-    if (!current || sectionNeedsNativeScroll(current)) return;
+    if (!current || !canAdvanceFromSection(current, direction)) return;
 
     const nextIndex = activeIndex + direction;
     if (nextIndex < 0 || nextIndex >= sections.length) return;
@@ -148,6 +155,20 @@
     setActive(index);
   }
 
+  function onNavigationClick(event) {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest('.desktop-nav a[href^="#"], .mobile-menu a[href^="#"]');
+    if (!link) return;
+
+    const id = decodeHash(link.getAttribute('href') || '');
+    const index = sections.findIndex((section) => section.id === id);
+    if (index < 0) return;
+
+    event.preventDefault();
+    navigateTo(index, true);
+  }
+
+  document.addEventListener('click', onNavigationClick, true);
   window.addEventListener('scroll', scheduleMeasurement, { passive: true });
   window.addEventListener('resize', scheduleMeasurement, { passive: true });
   window.addEventListener('keydown', onKeyDown);
