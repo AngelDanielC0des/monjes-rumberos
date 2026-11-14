@@ -1,8 +1,8 @@
-# Fase 5 — Auditoría final y preparación de Preview
+# Fase 5 — Auditoría final y activación de YouTube
 
 ## Objetivo
 
-Auditar el resultado integrado de las fases 0–4 y preparar la validación real del reproductor. PR #1 ya está fusionado en `main`; esta fase no autoriza modificar directamente `main`, crear una nueva publicación de producción ni promover un Preview.
+Auditar las fases 0–4, registrar la publicación del commit integrado en producción y completar la validación real del reproductor una vez configurada la clave de YouTube. PR #1 está fusionado; PR #2 sigue en borrador documental.
 
 ## Estado de partida
 
@@ -10,7 +10,7 @@ Auditar el resultado integrado de las fases 0–4 y preparar la validación real
 - Fase 1: baile interpolado RIFE, CI y assets fuente originales preservados.
 - Fase 2: secciones adaptativas, Chromium en nueve viewports y build.
 - Fase 3: navegación por secciones, teclado contextual, foco, historial y movimiento reducido.
-- Fase 4: búsqueda YouTube server-side y reproductor oficial integrados; CI verde. La integración real está pendiente de credenciales y Preview.
+- Fase 4: búsqueda YouTube server-side y reproductor oficial integrados; CI verde y versión publicada. La búsqueda real sigue pendiente de credenciales.
 
 ## Resultados de auditoría — 2026-11-14
 
@@ -67,19 +67,22 @@ Se conservan title, description, canonical, Open Graph, Twitter metadata, sitema
 
 ### G. Producción y Vercel
 
-- Proyecto Vercel consultado: `monjes-rumberos`; dominio: `monjes-rumberos.vercel.app`.
-- Último deployment de producción observado: `dpl_EWuWm71yCMmz97UA7uGMJv3U5RUK`, `READY`, creado el 13 de noviembre de 2026 a las 06:45:06 UTC, antes de la fusión de PR #1.
-- Ese deployment conserva el árbol anterior de 11 archivos bajo `src/`; no contiene `youtube-player.js`, `section-navigation.js` ni `api/youtube-search.js`.
-- No se ha observado un deployment posterior a la fusión. El alias productivo sigue asociado al deployment anterior; **la versión integrada en GitHub no está publicada en producción**.
-- La ficha del proyecto no expone un vínculo Git con este repositorio. La consulta de variables de entorno devuelve `envs: []`; no existe `YOUTUBE_API_KEY` configurada.
-- No se ha creado un nuevo deployment ni se ha cambiado ningún alias durante esta auditoría.
+- Proyecto: `monjes-rumberos`; dominio: `https://monjes-rumberos.vercel.app/`.
+- Deployment Preview de validación: `dpl_Ft18Xuxe5v3UYRX19wiwRVjj9HeF`, estado `READY`, commit `3b6ec81`.
+- Deployment Production: `dpl_9togGRra2CEfUmgBBBK6YyLGpLgP`, estado `READY`, commit exacto `3b6ec81a353d2dfd477895066257075ac7bfc7e8`.
+- El alias `monjes-rumberos.vercel.app` apunta confirmado al deployment `dpl_9togGRra2CEfUmgBBBK6YyLGpLgP`; la portada pública devuelve HTTP 200.
+- La portada sirve `youtube-player.js` y `section-navigation.js`. Los assets de baile y escenas comprobados responden HTTP 200.
+- `GET /api/youtube-search?q=daft%20punk` devuelve HTTP 503 `youtube_not_configured`, respuesta esperada mientras falte `YOUTUBE_API_KEY`. La función está desplegada, pero todavía no puede buscar en Google.
+- La lista de variables de entorno del proyecto devuelve `envs: []`; no existe `YOUTUBE_API_KEY` configurada.
+- El proyecto no figura vinculado mediante integración Git persistente. El despliegue se realizó con Git source y SHA explícito; futuros pushes a `main` no se auto-publicarán hasta conectar el repositorio desde Vercel.
+- La publicación de producción fue solicitada explícitamente por el propietario y se completó sin cambiar el dominio.
 
 ## Bloqueos para cerrar la validación real
 
-1. **Google Cloud:** el propietario debe habilitar YouTube Data API v3 y crear una API key restringida a esa API.
-2. **Vercel:** confirmar/vincular el proyecto correcto con este repositorio, sin cambiar el dominio productivo ni la rama de producción.
-3. **Variable Preview:** configurar `YOUTUBE_API_KEY` en Preview, nunca en código, HTML ni variable pública.
-4. **Preview Deployment:** crear un Preview de la versión integrada y probar búsqueda real, elegibilidad, reproducción, errores, cuota y dimensiones del iframe.
+1. **Google Cloud:** habilitar YouTube Data API v3 y crear una API key estándar restringida a esa API.
+2. **Vercel Preview:** añadir `YOUTUBE_API_KEY` al entorno Preview y crear un nuevo Preview para probar una búsqueda real, la elegibilidad de vídeos y la reproducción oficial.
+3. **Vercel Production:** después de validar Preview, añadir `YOUTUBE_API_KEY` al entorno Production y volver a desplegar el mismo commit.
+4. **Automatización futura:** conectar GitHub con el proyecto Vercel existente si se desea que los futuros pushes a `main` desplieguen automáticamente. La publicación actual fue manual y fijada a SHA.
 5. **Revisión manual:** comprobar visualmente la web y usar teclado/lector de pantalla antes de considerar cerrada la entrega.
 
 La documentación oficial consultada confirma que `search.list` dispone de un bucket predeterminado de 100 llamadas diarias (una unidad por llamada), que `videos.list` devuelve `status.embeddable` y `status.madeForKids`, y que el reproductor exige un viewport mínimo de 200 × 200 px. Referencias:
@@ -96,8 +99,8 @@ La documentación oficial consultada confirma que `search.list` dispone de un bu
 - Revisión manual visual y de accesibilidad completada.
 - Limitaciones y SHA exacto documentados.
 
-El CI del commit integrado en `main` está en verde y el informe Git/Vercel está actualizado. La CI de este PR documental se comprobará sobre su último commit antes de solicitar su integración. La validación Preview y la revisión manual siguen bloqueadas por la configuración de Google Cloud/Vercel.
+El CI del commit integrado en `main` está en verde. El Preview sin clave y la publicación en Production están completados y verificados por HTTP. La búsqueda y reproducción reales siguen pendientes de la clave de Google; la revisión visual/manual de accesibilidad sigue pendiente.
 
 ## Protección de producción
 
-`main` contiene ya el merge de PR #1. No realizar commits directos a `main`. Toda corrección posterior debe ir en una rama nueva y PR. No promover Preview a Production ni modificar el alias `monjes-rumberos.vercel.app` hasta disponer de validación real y autorización explícita.
+`main` contiene el merge de PR #1 y está publicado en `monjes-rumberos.vercel.app`. No realizar commits directos a `main`; toda corrección posterior debe ir en una rama nueva y PR. No cambiar el alias productivo ni desplegar código nuevo sin validación y autorización explícita.
