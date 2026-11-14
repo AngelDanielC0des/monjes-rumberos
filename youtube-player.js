@@ -339,10 +339,6 @@
   closeButton.addEventListener('click', () => closePanel());
   searchForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    if (!playerReady) {
-      setStatus('El reproductor todavía se está preparando.');
-      return;
-    }
     const query = searchInput.value.trim();
     if (query.length < 2) {
       setStatus('Escribe al menos dos caracteres para buscar.');
