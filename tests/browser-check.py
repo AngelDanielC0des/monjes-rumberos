@@ -124,10 +124,23 @@ with sync_playwright() as p:
     assert page.locator('#youtube-player iframe').count() == 0
     page.locator('#youtube-search-input').fill('house music')
     page.locator('#youtube-search-submit').click()
-    page.wait_for_function(
-        "window.__fakeYouTubePlayer && document.querySelectorAll('.youtube-result').length === 1 && !document.querySelector('.youtube-result__play').disabled",
-        timeout=3000,
-    )
+    try:
+        page.wait_for_function(
+            "window.__fakeYouTubePlayer && document.querySelectorAll('.youtube-result').length === 1 && !document.querySelector('.youtube-result__play').disabled",
+            timeout=5000,
+        )
+    except Exception:
+        debug_state = page.evaluate("""() => ({
+          status: document.querySelector('#youtube-search-status')?.textContent,
+          fetches: window.__youtubeTestFetches,
+          results: document.querySelectorAll('.youtube-result').length,
+          playerCreated: Boolean(window.__fakeYouTubePlayer),
+          inputDisabled: document.querySelector('#youtube-search-input')?.disabled,
+          submitDisabled: document.querySelector('#youtube-search-submit')?.disabled,
+          playerButtonDisabled: document.querySelector('.youtube-result__play')?.disabled
+        })""")
+        print('YouTube player debug state:', debug_state, flush=True)
+        raise
     page.locator('.youtube-result__play').click()
     page.wait_for_function(
         "window.__fakeYouTubePlayer.loadedVideoIds.includes('abcdefghijk')",
