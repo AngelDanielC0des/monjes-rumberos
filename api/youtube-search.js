@@ -1,4 +1,3 @@
-const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
 const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const SEARCH_LIMIT = 6;
 const MAX_QUERY_LENGTH = 80;
@@ -37,7 +36,7 @@ function mapGoogleError(reason) {
       message: 'La cuota diaria de búsqueda de YouTube se ha agotado. Inténtalo más tarde.',
     };
   }
-  if (['keyInvalid', 'accessNotConfigured', 'forbidden'].includes(reason)) {
+  if (['keyInvalid', 'API_KEY_INVALID', 'accessNotConfigured', 'SERVICE_DISABLED', 'forbidden', 'API_KEY_SERVICE_BLOCKED', 'API_KEY_IP_ADDRESS_BLOCKED', 'API_KEY_HTTP_REFERRER_BLOCKED'].includes(reason)) {
     return {
       status: 503,
       code: 'youtube_api_unavailable',
@@ -53,6 +52,17 @@ function mapGoogleError(reason) {
 
 export async function GET(request) {
   const url = new URL(request.url);
+  const requestOrigin = request.headers.get('origin');
+  const fetchSite = request.headers.get('sec-fetch-site');
+  if ((requestOrigin && requestOrigin !== url.origin) || fetchSite === 'cross-site') {
+    return json({
+      error: {
+        code: 'cross_origin_request',
+        message: 'La búsqueda solo está disponible desde la web oficial.',
+      },
+    }, 403);
+  }
+
   const rawQuery = url.searchParams.get('q') || '';
   const query = rawQuery.normalize('NFKC').replace(/[\s\u00a0]+/g, ' ').trim();
 
