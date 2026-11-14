@@ -365,7 +365,12 @@
   document.addEventListener('pointerdown', (event) => {
     if (panel.hidden) return;
     if (panel.contains(event.target) || toggle.contains(event.target)) return;
-    closePanel({ restoreFocus: false });
+    const target = event.target instanceof Element ? event.target : null;
+    const clickedFocusable = target?.closest(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+      'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    closePanel({ restoreFocus: !clickedFocusable });
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && playerReady && player && typeof player.pauseVideo === 'function') {
