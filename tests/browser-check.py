@@ -484,6 +484,7 @@ with sync_playwright() as p:
             assert menu_geometry['linkTop'] >= menu_geometry['menuTop'] - 1
             assert menu_geometry['linkBottom'] <= menu_geometry['menuBottom'] + 1
             last_menu_link.click()
+            page.wait_for_function("location.hash === '#booking' && document.activeElement.id === 'booking'", timeout=3000)
             assert button.get_attribute('aria-expanded') == 'false'
         else:
             assert data['framePosition'] == 'fixed', data
