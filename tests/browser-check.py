@@ -96,6 +96,20 @@ with sync_playwright() as p:
     assert inside_y > start_y, {'startY': start_y, 'insideY': inside_y}
     assert page.evaluate('location.hash') == '#manifiesto'
 
+    page_down_start = page.evaluate('window.scrollY')
+    page.keyboard.press('PageDown')
+    page.wait_for_timeout(120)
+    page_down_end = page.evaluate('window.scrollY')
+    assert page_down_end > page_down_start, {'pageDownStart': page_down_start, 'pageDownEnd': page_down_end}
+    assert page.evaluate('location.hash') == '#manifiesto'
+
+    page_up_start = page.evaluate('window.scrollY')
+    page.keyboard.press('PageUp')
+    page.wait_for_timeout(120)
+    page_up_end = page.evaluate('window.scrollY')
+    assert page_up_end < page_up_start, {'pageUpStart': page_up_start, 'pageUpEnd': page_up_end}
+    assert page.evaluate('location.hash') == '#manifiesto'
+
     page.evaluate("""() => {
       const section = document.querySelector('#manifiesto');
       window.scrollTo({
