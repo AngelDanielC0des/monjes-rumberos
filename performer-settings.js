@@ -61,6 +61,7 @@
 
   function openPanel(source) {
     returnFocus = source instanceof HTMLElement ? source : toggle;
+    document.dispatchEvent(new CustomEvent('monjes:panel-open', { detail: 'settings' }));
     panel.hidden = false;
     updatePanel();
     closeButton.focus();
@@ -92,6 +93,10 @@
     if (allHidden()) api.showAll();
     else api.hideAll();
     updatePanel();
+  });
+
+  document.addEventListener('monjes:panel-open', (event) => {
+    if (event.detail !== 'settings') closePanel({ restoreFocus: false });
   });
 
   document.addEventListener('keydown', (event) => {
