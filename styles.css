@@ -955,6 +955,8 @@ body::before {
 }
 .youtube-player-panel__frame {
   position: relative;
+  display: grid;
+  place-items: center;
   width: 100%;
   min-width: 200px;
   min-height: 200px;
@@ -1126,7 +1128,21 @@ body::before {
   .youtube-result__play { grid-column: 2; justify-self: start; min-height: 32px; }
 }
 @media (max-height: 420px) {
-  .youtube-player-panel { max-height: calc(100dvh - 88px); padding: 12px; gap: 8px; }
+  .youtube-player-panel {
+    top: 8px;
+    bottom: auto;
+    max-height: calc(100dvh - 16px);
+    padding: 10px;
+    gap: 6px;
+  }
+  .youtube-player-panel__description,
+  .youtube-player-panel__footnote { display: none; }
+  .youtube-player-panel__topline h2 { font-size: 20px; }
+  .youtube-player-panel__frame {
+    height: 200px;
+    min-height: 200px;
+    aspect-ratio: auto;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .youtube-player-toggle { transition: none; }
