@@ -1,97 +1,103 @@
-# Fase 5 — Auditoría final y preparación de entrega
+# Fase 5 — Auditoría final y preparación de Preview
 
 ## Objetivo
 
-Cerrar la auditoría de las fases 0–4 y dejar la rama lista para una validación de Preview Deployment. Esta fase no autoriza fusionar el PR ni promover cambios a producción.
+Auditar el resultado integrado de las fases 0–4 y preparar la validación real del reproductor. PR #1 ya está fusionado en `main`; esta fase no autoriza modificar directamente `main`, crear una nueva publicación de producción ni promover un Preview.
 
 ## Estado de partida
 
-- Fase 0: línea base y rama limpia derivada de `main`.
-- Fase 1: baile interpolado RIFE, CI y assets originales preservados.
+- Fase 0: línea base y rama de trabajo derivada de `main`.
+- Fase 1: baile interpolado RIFE, CI y assets fuente originales preservados.
 - Fase 2: secciones adaptativas, Chromium en nueve viewports y build.
 - Fase 3: navegación por secciones, teclado contextual, foco, historial y movimiento reducido.
-- Fase 4: búsqueda YouTube server-side y reproductor oficial implementados; CI verde. La integración real está pendiente de la clave Google y del vínculo con Vercel.
+- Fase 4: búsqueda YouTube server-side y reproductor oficial integrados; CI verde. La integración real está pendiente de credenciales y Preview.
 
-## Auditoría final
+## Resultados de auditoría — 2026-11-14
 
-### A. Integridad Git y producción
+### A. Integridad Git
 
-- Confirmar que la base del PR sigue siendo el SHA original de `main`.
-- Confirmar que el PR continúa en borrador y no fusionado.
-- Confirmar que ningún deployment de producción se ha creado o promovido durante el trabajo.
-- Revisar el diff completo para detectar cambios ajenos al alcance.
-- Verificar que los assets fuente originales de los monjes permanecen intactos y fuera del bundle público.
+- PR #1: fusionado el 14 de noviembre de 2026 a las 04:37:48 UTC.
+- Commit de integración en `main`: `3b6ec81a353d2dfd477895066257075ac7bfc7e8`.
+- HEAD de la rama del PR: `13c1e567e80df3b5db5f5f61d9c2a77ea239bcb3`.
+- Base original del PR: `2448be30dc88d4b58606f2f3cfd1d975d6dfecb6`.
+- PR #1 integró 87 commits y 32 archivos. La lista de cambios se limita a la landing, sus assets de baile, scripts, pruebas, CI y documentación de las fases 0–5.
+- No se ha realizado ningún commit directo adicional en `main`. Esta auditoría documental continúa en una rama nueva basada en el commit de integración.
 
-### B. Seguridad
+### B. CI, pruebas y build
 
-- Verificar que no existe ninguna API key en HTML, JS público, repositorio, logs ni artefactos estáticos.
-- Verificar que `YOUTUBE_API_KEY` solo se lee en `api/youtube-search.js`.
-- Verificar validación de entrada, límite de resultados, timeout, mapeo de cuota, rechazo cross-origin y ausencia de CORS permisivo.
-- Verificar que la función server-side no se copia a `public/`.
-- Revisar los headers de seguridad ya definidos en `vercel.json`.
-- Revisar que el reproductor no utiliza extracción de audio, scraping, autoplay ni controles superpuestos.
+<badge>PASS — GitHub Actions</badge>
 
-### C. Accesibilidad
+La ejecución sobre el commit de integración es [43557606754](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43557606754), con resultado `success`. Pasaron todos estos pasos:
 
-- Validar navegación por enlaces, teclado, PageUp/PageDown y flechas.
-- Validar que los controles interactivos conservan su comportamiento de teclado.
-- Validar foco visible, restauración de foco, Escape, estados ARIA y mensajes `aria-live`.
-- Validar `prefers-reduced-motion` en navegación, escenas y reproductor.
-- Revisar etiquetas, jerarquía semántica, nombres accesibles y alternativas de imágenes.
+- Instalación de Node.js y Python y dependencias.
+- Comprobaciones JavaScript y pruebas de humo.
+- Tests unitarios de la función YouTube.
+- Regresión de animaciones WebP.
+- Regresión Chromium responsive.
+- Build de despliegue estático.
 
-### D. Responsive y experiencia
+El build estático genera 41 archivos. `api/youtube-search.js` permanece fuera de `public/`; el bundle incluye los controladores de navegación y reproductor.
 
-- Ejecutar Chromium en la matriz existente de nueve viewports.
-- Revisar menú móvil, panel de ajustes y panel de YouTube en 568 × 320, 390 × 844, 320 × 740 y escritorio.
-- Verificar reproductor de mínimo 200 × 200 px y controles visibles.
-- Verificar ausencia de overflow horizontal y contenido tapado.
-- Revisar orientación horizontal y alturas reducidas.
+### C. Integridad de assets de baile
 
-### E. Rendimiento y SEO
+- `assets/monks/dance/manifest.json` registra hashes SHA-256, tamaños, dimensiones, número de frames, duración y fuentes originales de ambos monjes.
+- `tests/dance-webp-test.py` verifica los hashes reales de animaciones, posters, GIF fallback y WebP fuente.
+- La prueba comprueba 63 frames a 25 FPS, duración de 2.520 ms, loop infinito, transparencia, conservación de las nueve poses fuente y continuidad del cierre del loop.
+- La regresión de ambos monjes pasó en la última CI. Las fuentes originales siguen separadas en `assets/monks/dance/source/`.
 
-- Comprobar carga prioritaria del hero y lazy loading de escenas secundarias.
-- Revisar peso y formato de imágenes/animaciones, carga diferida del IFrame API y número de solicitudes de búsqueda.
-- Verificar metadatos, canonical, Open Graph, sitemap y robots.
-- Confirmar que no se carga YouTube hasta que el visitante abre el flujo de búsqueda y obtiene resultados elegibles.
+### D. Seguridad
 
-### F. Pruebas y build
+- `api/youtube-search.js` lee la clave exclusivamente desde `process.env.YOUTUBE_API_KEY` y la envía mediante `x-goog-api-key`; no la devuelve al cliente.
+- La búsqueda de código de GitHub no devolvió coincidencias para patrones `AIza` ni `YOUTUBE_API_KEY` literal; el índice indicó resultados incompletos, por lo que esto no se presenta como una auditoría exhaustiva de todos los bytes.
+- La prueba de humo comprueba que la función no contiene una clave API literal con formato Google.
+- Los tests API cubren clave ausente, consulta inválida, origen externo, filtros oficiales, elegibilidad de vídeos, cuota agotada, errores de clave y fallos de red.
+- `vercel.json` conserva `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY` y `Permissions-Policy` restrictiva.
+- No se ha añadido ningún secreto al repositorio.
 
-- `npm run check`
-- `npm run test:smoke`
-- `npm run test:youtube-api`
-- `npm run test:browser`
-- `python tests/dance-webp-test.py`
-- `npm run build`
-- Confirmar que el bundle estático incluye el controlador de navegación y el reproductor, pero no la función API ni secretos.
+### E. Accesibilidad y responsive
 
-## Resultados de auditoría automatizada — 2026-11-14
+- Chromium cubre nueve viewports para la landing y pruebas específicas del reproductor en orientación horizontal.
+- La CI comprueba navegación de secciones por teclado, contenido largo, formularios, menú móvil, historial/hash, foco, Escape y coordinación entre paneles.
+- El reproductor se dimensiona para no bajar de 200 × 200 px en los tamaños probados; YouTube recomienda 480 × 270 px para 16:9 con controles.
+- La automatización no sustituye una auditoría manual con lector de pantalla ni una comprobación visual humana en dispositivos físicos.
 
-- **Git:** `main` conserva el SHA base `2448be30dc88d4b58606f2f3cfd1d975d6dfecb6`. El PR #1 sigue abierto, en borrador y sin fusionar.
-- **CI del código:** PASS en el commit de código `d5ff15a65e3cbe4f15994cd2b560d696c4abeea0`, run [43556935180](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43556935180). Los commits posteriores registrados hasta este informe solo actualizan documentación.
-- **Responsive:** Chromium cubre nueve tamaños de pantalla para la landing, y pruebas adicionales del panel YouTube en orientación horizontal de poca altura.
-- **Accesibilidad automatizada:** navegación por teclado, secciones altas, foco, Escape, menú móvil, historial/hash, formularios y movimiento reducido verificados. No sustituye una revisión manual con lector de pantalla.
-- **Build:** 41 archivos estáticos. La función `api/youtube-search.js` no se copia a `public/`.
-- **Seguridad YouTube:** clave leída solo desde `process.env.YOUTUBE_API_KEY`; tests cubren ausencia de clave, restricciones de origen, parámetros oficiales, elegibilidad embeddable/Made for Kids, cuota y fallos upstream. No se ha encontrado ni añadido una clave real.
-- **SEO:** se conservan title, description, canonical, Open Graph, Twitter metadata, sitemap y robots.
-- **Vercel:** existe el proyecto `monjes-rumberos` y el alias productivo `monjes-rumberos.vercel.app`. La ficha de proyecto no muestra enlace Git a este repositorio y la lista de variables de entorno está vacía. No se ha creado ningún deployment ni se ha cambiado un alias.
-- **Pendiente:** búsqueda real de YouTube, reproducción real del iframe y Preview Deployment, bloqueados hasta configurar la API key y confirmar/vincular el proyecto Vercel correcto.
+### F. SEO
 
-## Bloqueos externos para la validación completa
+Se conservan title, description, canonical, Open Graph, Twitter metadata, sitemap y robots. No se ha eliminado el marcado SEO existente.
 
-1. **Google Cloud:** falta crear y restringir una API key para YouTube Data API v3.
-2. **Vercel:** existe el proyecto `monjes-rumberos` y el dominio productivo `monjes-rumberos.vercel.app`, pero la ficha no muestra un vínculo Git con este repositorio. La lista de variables de entorno está vacía. Hay que confirmar el proyecto correcto y vincular el repositorio sin cambiar la rama de producción.
-3. **Preview:** una vez configurado lo anterior, desplegar solo un Preview de la rama de trabajo y probar búsqueda, elegibilidad, reproducción, errores, cuota y dimensiones reales del iframe.
+### G. Producción y Vercel
 
-No se debe configurar la clave en el código fuente ni en variables públicas. Para la primera validación, usar el entorno Preview de Vercel; no añadir la clave al entorno Production todavía.
+- Proyecto Vercel consultado: `monjes-rumberos`; dominio: `monjes-rumberos.vercel.app`.
+- Último deployment de producción observado: `dpl_EWuWm71yCMmz97UA7uGMJv3U5RUK`, `READY`, creado el 13 de noviembre de 2026 a las 06:45:06 UTC, antes de la fusión de PR #1.
+- Ese deployment conserva el árbol anterior de 11 archivos bajo `src/`; no contiene `youtube-player.js`, `section-navigation.js` ni `api/youtube-search.js`.
+- No se ha observado un deployment posterior a la fusión. El alias productivo sigue asociado al deployment anterior; **la versión integrada en GitHub no está publicada en producción**.
+- La ficha del proyecto no expone un vínculo Git con este repositorio. La consulta de variables de entorno devuelve `envs: []`; no existe `YOUTUBE_API_KEY` configurada.
+- No se ha creado un nuevo deployment ni se ha cambiado ningún alias durante esta auditoría.
 
-## Criterios de cierre
+## Bloqueos para cerrar la validación real
 
-- Todas las pruebas automatizadas en verde sobre el último commit.
-- Auditoría de diff y secretos sin hallazgos críticos.
-- Preview Deployment validado con una búsqueda real y reproducción real.
-- Informe final con resultados, limitaciones y SHA exacto.
-- PR preparado para revisión humana, todavía sin fusionar.
+1. **Google Cloud:** el propietario debe habilitar YouTube Data API v3 y crear una API key restringida a esa API.
+2. **Vercel:** confirmar/vincular el proyecto correcto con este repositorio, sin cambiar el dominio productivo ni la rama de producción.
+3. **Variable Preview:** configurar `YOUTUBE_API_KEY` en Preview, nunca en código, HTML ni variable pública.
+4. **Preview Deployment:** crear un Preview de la versión integrada y probar búsqueda real, elegibilidad, reproducción, errores, cuota y dimensiones del iframe.
+5. **Revisión manual:** comprobar visualmente la web y usar teclado/lector de pantalla antes de considerar cerrada la entrega.
+
+La documentación oficial consultada confirma que `search.list` dispone de un bucket predeterminado de 100 llamadas diarias (una unidad por llamada), que `videos.list` devuelve `status.embeddable` y `status.madeForKids`, y que el reproductor exige un viewport mínimo de 200 × 200 px. Referencias:
+
+- https://developers.google.com/youtube/data/reference/rest/v3/search/list
+- https://developers.google.com/youtube/data/reference/rest/v3/videos
+- https://developers.google.com/youtube/iframe_api_reference
+
+## Criterios de cierre de la Fase 5
+
+- CI verde sobre el último commit de la rama de auditoría.
+- Informe y estado de Git/Vercel actualizados.
+- Preview validado con una búsqueda real y reproducción real.
+- Revisión manual visual y de accesibilidad completada.
+- Limitaciones y SHA exacto documentados.
+
+Los dos primeros criterios están cumplidos en esta auditoría. Los tres restantes siguen bloqueados por la configuración de Google Cloud/Vercel y la revisión manual.
 
 ## Protección de producción
 
-`main` permanece intacta. No fusionar, no promover Preview a Production y no modificar el dominio productivo sin una instrucción explícita posterior.
+`main` contiene ya el merge de PR #1. No realizar commits directos a `main`. Toda corrección posterior debe ir en una rama nueva y PR. No promover Preview a Production ni modificar el alias `monjes-rumberos.vercel.app` hasta disponer de validación real y autorización explícita.
