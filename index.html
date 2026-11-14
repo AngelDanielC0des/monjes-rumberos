@@ -79,6 +79,14 @@
     </button>
   </div>
 
+  <button class="youtube-player-toggle" id="youtube-player-toggle" type="button"
+    aria-label="Abrir reproductor de YouTube" aria-controls="youtube-player-panel" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 9.5v5a2 2 0 0 0 2 2h1.5l3.2 2.6a1 1 0 0 0 1.6-.8V5.7a1 1 0 0 0-1.6-.8L7.5 7.5H6a2 2 0 0 0-2 2Z"/>
+      <path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/>
+    </svg>
+  </button>
+
   <button class="performer-settings-toggle" type="button" aria-label="Abrir ajustes de los monjes"
     aria-controls="performer-settings" aria-expanded="false">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -110,6 +118,35 @@
       </button>
     </div>
     <p class="performer-settings__footnote">Puedes volver a abrir este panel desde el botón de ajustes, aunque los monjes estén ocultos.</p>
+  </aside>
+
+  <aside class="youtube-player-panel" id="youtube-player-panel" role="dialog" aria-modal="false"
+    aria-labelledby="youtube-player-title" aria-describedby="youtube-player-description" hidden>
+    <div class="youtube-player-panel__topline">
+      <div>
+        <span class="youtube-player-panel__eyebrow">MÚSICA PARA LA PISTA</span>
+        <h2 id="youtube-player-title">Elige el ritmo.</h2>
+      </div>
+      <button class="youtube-player-panel__close" type="button" aria-label="Cerrar reproductor de YouTube">×</button>
+    </div>
+    <p class="youtube-player-panel__description" id="youtube-player-description">Busca vídeos musicales y reprodúcelos desde el reproductor oficial de YouTube.</p>
+    <div class="youtube-player-panel__frame" id="youtube-player-frame">
+      <div id="youtube-player" aria-label="Reproductor oficial de YouTube"></div>
+    </div>
+    <p class="youtube-player-panel__current" id="youtube-current-track">Selecciona un resultado para cargarlo aquí.</p>
+    <form class="youtube-search-form" id="youtube-search-form" role="search">
+      <label for="youtube-search-input">Buscar en YouTube</label>
+      <div class="youtube-search-form__row">
+        <input id="youtube-search-input" name="q" type="search" maxlength="80" minlength="2"
+          placeholder="Artista, canción o estilo…" autocomplete="off" required disabled>
+        <button id="youtube-search-submit" type="submit" disabled>Buscar</button>
+      </div>
+    </form>
+    <p class="youtube-player-panel__status" id="youtube-search-status" role="status" aria-live="polite">
+      Abre el panel para preparar el reproductor.
+    </p>
+    <ul class="youtube-search-results" id="youtube-search-results" aria-label="Resultados de búsqueda de YouTube"></ul>
+    <p class="youtube-player-panel__footnote">La reproducción utiliza el reproductor y los controles oficiales de YouTube. Al cerrar este panel, el vídeo se pausa.</p>
   </aside>
 
   <header class="site-header">
