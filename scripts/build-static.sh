@@ -6,7 +6,7 @@ cd "$ROOT"
 rm -rf public
 mkdir -p public/assets/images public/assets/sections public/assets/monks/dance
 
-for file in index.html styles.css layout-fix.css scroll-scenes.js performer-motion.js performer-settings.js section-navigation.js app.js favicon.svg robots.txt sitemap.xml vercel.json; do
+for file in index.html styles.css layout-fix.css scroll-scenes.js performer-motion.js performer-settings.js section-navigation.js youtube-player.js app.js favicon.svg robots.txt sitemap.xml vercel.json; do
   [[ -s "$file" ]] || { echo "Missing source file: $file" >&2; exit 1; }
   cp "$file" public/"$file"
 done
@@ -25,7 +25,7 @@ for file in assets/sections/*.webp; do
   [[ -s "$file" ]] || { echo "Empty scene asset: $file" >&2; exit 1; }
 done
 
-for file in index.html styles.css layout-fix.css scroll-scenes.js performer-motion.js performer-settings.js section-navigation.js app.js favicon.svg robots.txt sitemap.xml vercel.json assets/images/monjes-frame.webp assets/monks/monjes-frame-desktop.webp assets/monks/dance/monje-left-dance.webp assets/monks/dance/monje-right-dance.webp assets/monks/dance/monje-left-poster.webp assets/monks/dance/monje-right-poster.webp assets/monks/dance/monje-left-dance.gif assets/monks/dance/monje-right-dance.gif assets/monks/dance/manifest.json; do
+for file in index.html styles.css layout-fix.css scroll-scenes.js performer-motion.js performer-settings.js section-navigation.js youtube-player.js app.js favicon.svg robots.txt sitemap.xml vercel.json assets/images/monjes-frame.webp assets/monks/monjes-frame-desktop.webp assets/monks/dance/monje-left-dance.webp assets/monks/dance/monje-right-dance.webp assets/monks/dance/monje-left-poster.webp assets/monks/dance/monje-right-poster.webp assets/monks/dance/monje-left-dance.gif assets/monks/dance/monje-right-dance.gif assets/monks/dance/manifest.json; do
   [[ -s "public/$file" ]] || { echo "Build output missing: $file" >&2; exit 1; }
 done
 
