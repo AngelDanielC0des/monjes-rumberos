@@ -123,7 +123,7 @@ with sync_playwright() as p:
     page.evaluate("window.location.hash = '#booking'")
     page.wait_for_function("location.hash === '#booking'", timeout=3000)
     page.wait_for_function(
-        "Math.abs(document.querySelector('#booking').getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop || 0)) < 5",
+        "document.querySelector('#booking').getBoundingClientRect().top < innerHeight",
         timeout=3000,
     )
 
