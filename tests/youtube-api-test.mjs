@@ -17,6 +17,13 @@ try {
   assert.equal(response.status, 400);
   assert.equal((await response.json()).error.code, 'query_too_short');
 
+  response = await GET(new Request(
+    'https://monjes.example/api/youtube-search?q=house',
+    { headers: { Origin: 'https://attacker.example', 'Sec-Fetch-Site': 'cross-site' } },
+  ));
+  assert.equal(response.status, 403);
+  assert.equal((await response.json()).error.code, 'cross_origin_request');
+
   response = await GET(request('x'.repeat(81)));
   assert.equal(response.status, 400);
   assert.equal((await response.json()).error.code, 'invalid_query');
@@ -99,6 +106,13 @@ try {
   response = await GET(request('techno'));
   assert.equal(response.status, 429);
   assert.equal((await response.json()).error.code, 'quota_exceeded');
+
+  globalThis.fetch = async () => Response.json({
+    error: { errors: [{ reason: 'API_KEY_INVALID' }] },
+  }, { status: 403 });
+  response = await GET(request('house'));
+  assert.equal(response.status, 503);
+  assert.equal((await response.json()).error.code, 'youtube_api_unavailable');
 
   globalThis.fetch = async () => {
     throw new Error('simulated network failure');
