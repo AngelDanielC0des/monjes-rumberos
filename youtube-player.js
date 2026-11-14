@@ -98,9 +98,12 @@
     }
   }
 
-  async function initializePlayer() {
+  async function initializePlayer(initialVideoId) {
     if (playerReady) return player;
     if (playerReadyPromise) return playerReadyPromise;
+    if (!VIDEO_ID_PATTERN.test(initialVideoId || '')) {
+      throw new Error('youtube-video-id-invalid');
+    }
 
     playerReadyPromise = (async () => {
       const api = await loadIframeApi();
@@ -111,6 +114,7 @@
           player = new api.Player('youtube-player', {
             width: size.width,
             height: size.height,
+            videoId: initialVideoId,
             playerVars: {
               autoplay: 0,
               controls: 1,
@@ -124,7 +128,10 @@
                 resizePlayer();
                 searchInput.disabled = false;
                 searchButton.disabled = false;
-                setStatus('Busca una canción, artista o estilo musical.');
+                renderResults();
+                setStatus(results.length
+                  ? `${results.length} vídeos disponibles. Selecciona uno para reproducirlo.`
+                  : 'Busca una canción, artista o estilo musical.');
                 resolve(event.target);
               },
               onStateChange: handlePlayerState,
@@ -270,9 +277,22 @@
       ).slice(0, 6) : [];
 
       renderResults();
-      setStatus(results.length
-        ? `${results.length} vídeos disponibles. Selecciona uno para reproducirlo.`
-        : 'No se encontraron vídeos incrustables para esa búsqueda.');
+      if (!results.length) {
+        setStatus('No se encontraron vídeos incrustables para esa búsqueda.');
+      } else if (playerReady) {
+        setStatus(`${results.length} vídeos disponibles. Selecciona uno para reproducirlo.`);
+      } else {
+        setStatus('Preparando el reproductor oficial de YouTube…');
+        initializePlayer(results[0].id)
+          .then(() => {
+            renderResults();
+            setStatus(`${results.length} vídeos disponibles. Selecciona uno para reproducirlo.`);
+          })
+          .catch(() => {
+            renderResults();
+            setStatus('No se ha podido cargar el reproductor. Vuelve a intentarlo con otra búsqueda.');
+          });
+      }
     } catch (error) {
       if (error?.name !== 'AbortError') {
         setStatus('No se ha podido conectar con el servicio de búsqueda. Inténtalo de nuevo.');
@@ -280,7 +300,7 @@
     } finally {
       if (requestController === controller) {
         requestController = null;
-        searchButton.disabled = !playerReady;
+        searchButton.disabled = false;
       }
     }
   }
@@ -291,18 +311,10 @@
     panel.hidden = false;
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Cerrar reproductor de YouTube');
-    searchInput.disabled = !playerReady;
-    searchButton.disabled = !playerReady;
+    searchInput.disabled = false;
+    searchButton.disabled = false;
     searchInput.focus();
-
-    if (!playerReady) {
-      setStatus('Conectando con el reproductor oficial de YouTube…');
-      initializePlayer().catch(() => {
-        setStatus('No se ha podido cargar el reproductor de YouTube. Comprueba tu conexión y vuelve a intentarlo.');
-      });
-    } else {
-      setStatus('Busca una canción, artista o estilo musical.');
-    }
+    setStatus('Busca una canción, artista o estilo musical.');
   }
 
   function closePanel({ restoreFocus = true } = {}) {
