@@ -13,6 +13,7 @@ layout_css_source = (ROOT / 'layout-fix.css').read_text(encoding='utf-8')
 js_source = (ROOT / 'app.js').read_text(encoding='utf-8')
 performer_motion_source = (ROOT / 'performer-motion.js').read_text(encoding='utf-8')
 performer_settings_source = (ROOT / 'performer-settings.js').read_text(encoding='utf-8')
+section_navigation_source = (ROOT / 'section-navigation.js').read_text(encoding='utf-8')
 scroll_scenes_source = (ROOT / 'scroll-scenes.js').read_text(encoding='utf-8')
 
 
@@ -41,6 +42,7 @@ html_source = html_source.replace('  <link rel="stylesheet" href="/layout-fix.cs
 html_source = html_source.replace('  <script src="/app.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/performer-motion.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/performer-settings.js" defer></script>', '')
+html_source = html_source.replace('  <script src="/section-navigation.js" defer></script>', '')
 html_source = re.sub(r'^\s*<link rel="preconnect"[^>]*>\s*$', '', html_source, flags=re.MULTILINE)
 html_source = re.sub(r'^\s*<link href="https://fonts\.googleapis\.com[^\n]+\n', '', html_source, flags=re.MULTILINE)
 html_source = re.sub(r'^\s*<link rel="preload"[^>]*>\s*$', '', html_source, flags=re.MULTILINE)
@@ -62,8 +64,77 @@ with sync_playwright() as p:
     page.add_script_tag(content=scroll_scenes_source)
     page.add_script_tag(content=performer_motion_source)
     page.add_script_tag(content=performer_settings_source)
+    page.add_script_tag(content=section_navigation_source)
     page.add_script_tag(content=js_source)
     page.wait_for_timeout(200)
+
+    print('browser-check: accessible section navigation', flush=True)
+    section_ids = page.locator('main#contenido > section').evaluate_all(
+        "(items) => items.map(item => item.id)"
+    )
+    assert section_ids == ['inicio', 'manifiesto', 'ritual', 'formatos', 'sonido', 'booking'], section_ids
+    assert page.locator('.desktop-nav a[href="#sonido"]').count() == 1
+    assert page.locator('.mobile-menu a[href="#sonido"]').count() == 1
+
+    page.locator('.desktop-nav a[href="#sonido"]').click()
+    page.wait_for_function(
+        "location.hash === '#sonido' && document.activeElement.id === 'sonido'",
+        timeout=3000,
+    )
+    assert page.locator('.desktop-nav a[href="#sonido"]').get_attribute('aria-current') == 'location'
+
+    # A long section must scroll natively before keyboard navigation advances.
+    page.evaluate("""() => {
+      document.querySelector('#manifiesto').style.minHeight = '1800px';
+      window.MonjesSectionNavigation.go('manifiesto');
+    }""")
+    page.wait_for_timeout(650)
+    start_y = page.evaluate('window.scrollY')
+    page.keyboard.press('ArrowDown')
+    page.wait_for_timeout(120)
+    inside_y = page.evaluate('window.scrollY')
+    assert inside_y > start_y, {'startY': start_y, 'insideY': inside_y}
+    assert page.evaluate('location.hash') == '#manifiesto'
+
+    page.evaluate("""() => {
+      const section = document.querySelector('#manifiesto');
+      window.scrollTo({
+        top: window.scrollY + section.getBoundingClientRect().bottom - window.innerHeight,
+        behavior: 'instant'
+      });
+    }""")
+    page.wait_for_function(
+        "document.querySelector('#manifiesto').getBoundingClientRect().bottom <= innerHeight + 10",
+        timeout=2500,
+    )
+    page.keyboard.press('ArrowDown')
+    page.wait_for_function(
+        "location.hash === '#ritual' && document.activeElement.id === 'ritual'",
+        timeout=3000,
+    )
+
+    # Interactive controls retain their native arrow-key behavior.
+    arrow_was_prevented = page.locator('#booking-form textarea').evaluate("""element => {
+      element.focus();
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowDown', bubbles: true, cancelable: true
+      });
+      element.dispatchEvent(event);
+      return event.defaultPrevented;
+    }""")
+    assert not arrow_was_prevented, 'Section navigation intercepted ArrowDown inside textarea'
+    page.evaluate("""() => {
+      document.querySelector('#manifiesto').style.removeProperty('min-height');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.activeElement?.blur();
+    }""")
+    page.wait_for_timeout(120)
+    results.append({
+      'sectionNavigation': 'pass',
+      'soundAnchor': True,
+      'keyboardLongSection': 'native-scroll-then-next-section',
+      'interactiveArrowKeys': 'not-intercepted',
+    })
 
     for width, height in [(2048, 1134), (1440, 900), (1024, 768), (823, 523), (768, 900), (568, 320), (390, 844), (320, 740), (844, 390)]:
         print(f'browser-check: viewport {width}x{height}', flush=True)
