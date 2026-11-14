@@ -116,24 +116,32 @@ No se inventará ni se escribirá ninguna clave en el repositorio.
 
 ## Estado de implementación
 
-**FASE 4 IMPLEMENTADA Y VERIFICADA EN CI.** Commit validado: `d5ff15a65e3cbe4f15994cd2b560d696c4abeea0`. GitHub Actions: [run 43556935180 — success](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43556935180).
+**FASE 4 IMPLEMENTADA E INTEGRADA EN `main`.** Commit de integración: `3b6ec81a353d2dfd477895066257075ac7bfc7e8`. PR #1 se fusionó el 14 de noviembre de 2026 a las 04:37:48 UTC. La CI del commit de integración terminó correctamente: [run 43557606754 — success](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43557606754).
 
-Entregables implementados:
+Entregables integrados:
 
-- `api/youtube-search.js`: Vercel Function GET, clave solo en servidor, búsqueda oficial, filtro de vídeos incrustables, comprobación Made for Kids, límite de consulta, timeout, errores, cache CDN y rechazo de peticiones cross-origin.
-- `youtube-player.js`: panel accesible, búsqueda explícita, inicialización diferida, un solo reproductor, reproducción por acción del usuario, pausa al cerrar/ocultar la pestaña y coordinación con ajustes.
-- `index.html` y `styles.css`: botón junto a ajustes, panel responsive, reproductor de al menos 200 × 200 px incluso en orientación horizontal de poca altura.
-- Tests API con `fetch` simulado y regresión Chromium con IFrame Player API simulada. No se consume cuota real en CI.
+- `api/youtube-search.js`: Vercel Function GET, clave solo en servidor, búsqueda oficial, filtro de vídeos incrustables, comprobación Made for Kids, validación de consulta, timeout, errores, caché CDN y rechazo de peticiones cross-origin.
+- `youtube-player.js`: panel accesible, búsqueda explícita, inicialización diferida, un único reproductor, reproducción por acción del usuario, pausa al cerrar/ocultar la pestaña y coordinación con ajustes.
+- `index.html` y `styles.css`: botón junto a ajustes, panel responsive y reproductor con viewport mínimo de 200 × 200 px también en orientación horizontal de poca altura.
+- Tests API con `fetch` simulado y regresión Chromium con IFrame Player API simulada. CI no consume cuota real.
 - El build estático contiene 41 archivos y excluye `api/youtube-search.js` del directorio público.
+
+### Estado de Git y producción después de la integración
+
+- PR #1 está fusionado. Su commit de integración es `3b6ec81a353d2dfd477895066257075ac7bfc7e8`; el HEAD de la rama de trabajo era `13c1e567e80df3b5db5f5f61d9c2a77ea239bcb3`.
+- El último deployment de producción de Vercel consultado es `dpl_EWuWm71yCMmz97UA7uGMJv3U5RUK`, estado `READY`, con alias `monjes-rumberos.vercel.app`. Se creó el 13 de noviembre de 2026 a las 06:45:06 UTC, antes de la fusión del PR.
+- El árbol de ese deployment contiene únicamente la versión anterior (11 archivos bajo `src/`); no contiene `youtube-player.js`, `section-navigation.js` ni `api/youtube-search.js`. No se ha observado un deployment posterior a la fusión. Por tanto, el código está en GitHub, pero la nueva versión no está publicada en producción.
+- La ficha del proyecto Vercel no expone un vínculo Git a este repositorio y la consulta de variables de entorno devuelve una lista vacía.
 
 ### Pendiente para activación real
 
-- No se ha proporcionado ni configurado `YOUTUBE_API_KEY`. La función responde deliberadamente con HTTP 503 y un mensaje claro mientras falte la variable. Las pruebas validan el contrato con respuestas simuladas; **la búsqueda real y la reproducción real todavía no se han probado contra Google/YouTube**.
-- El proyecto Vercel `monjes-rumberos` existe y conserva el dominio productivo `monjes-rumberos.vercel.app`, pero su ficha no expone un vínculo Git con este repositorio. La lista de variables de entorno está vacía; no existe `YOUTUBE_API_KEY`. No se ha creado un Preview Deployment ni se ha modificado ningún deployment existente.
-- Para validar la integración real, el propietario debe habilitar YouTube Data API v3 en Google Cloud, crear una clave restringida a esa API y añadirla en Vercel como `YOUTUBE_API_KEY` en el entorno Preview. Después habrá que vincular el repositorio a un proyecto Vercel y probar el Preview.
+- No se ha proporcionado ni configurado `YOUTUBE_API_KEY`. La función responde deliberadamente con HTTP 503 y un mensaje claro mientras falte la variable. Las pruebas verifican el contrato con respuestas simuladas; **la búsqueda real y la reproducción real todavía no se han probado contra Google/YouTube**.
+- Falta habilitar YouTube Data API v3 en Google Cloud, crear una clave restringida a esa API y añadirla en Vercel como `YOUTUBE_API_KEY` únicamente en el entorno Preview.
+- Después habrá que vincular el repositorio al proyecto Vercel correcto o crear un Preview controlado, probar la función y el reproductor reales, y revisar cuota/errores antes de plantear cualquier promoción.
 
-Producción permanece intacta: PR #1 sigue en borrador, no está fusionado y no se ha desplegado.
+No se debe incluir la clave en el repositorio, en HTML ni en variables públicas. No se ha modificado el alias productivo ni se ha desplegado esta versión a producción.
 
 ## Protección Git
 
-Continuar en `codex/monjes-rumberos-phase-0`. El PR #1 sigue en borrador. No fusionar ni desplegar a producción. La variable `YOUTUBE_API_KEY` debe configurarse únicamente en Vercel cuando el usuario tenga la clave.
+PR #1 ya está fusionado. Cualquier corrección posterior debe realizarse en una rama nueva basada en `main` y pasar por su propio PR. No modificar directamente `main`, no promover Preview a Production y no cambiar el dominio productivo sin autorización explícita. La clave `YOUTUBE_API_KEY` debe configurarse únicamente en Vercel, en Preview, cuando esté disponible.
+
