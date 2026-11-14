@@ -51,4 +51,5 @@ jobs:
           test -s public/styles.css
           test -s public/assets/monks/dance/monje-left-dance.webp
           test -s public/assets/monks/dance/monje-right-dance.webp
-          test "$(find public -type f | wc -l | tr -d ' ')" -eq 39
+          test -s public/section-navigation.js
+          test "$(find public -type f | wc -l | tr -d ' ')" -eq 40
