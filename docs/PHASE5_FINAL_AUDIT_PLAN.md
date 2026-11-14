@@ -25,7 +25,7 @@ Auditar el resultado integrado de las fases 0–4 y preparar la validación real
 
 ### B. CI, pruebas y build
 
-<badge>PASS — GitHub Actions</badge>
+**PASS — GitHub Actions**
 
 La ejecución sobre el commit de integración es [43557606754](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43557606754), con resultado `success`. Pasaron todos estos pasos:
 
