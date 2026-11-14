@@ -126,22 +126,31 @@ Entregables integrados:
 - Tests API con `fetch` simulado y regresión Chromium con IFrame Player API simulada. CI no consume cuota real.
 - El build estático contiene 41 archivos y excluye `api/youtube-search.js` del directorio público.
 
-### Estado de Git y producción después de la integración
+### Estado de Git y despliegue
 
 - PR #1 está fusionado. Su commit de integración es `3b6ec81a353d2dfd477895066257075ac7bfc7e8`; el HEAD de la rama de trabajo era `13c1e567e80df3b5db5f5f61d9c2a77ea239bcb3`.
-- El último deployment de producción de Vercel consultado es `dpl_EWuWm71yCMmz97UA7uGMJv3U5RUK`, estado `READY`, con alias `monjes-rumberos.vercel.app`. Se creó el 13 de noviembre de 2026 a las 06:45:06 UTC, antes de la fusión del PR.
-- El árbol de ese deployment contiene únicamente la versión anterior (11 archivos bajo `src/`); no contiene `youtube-player.js`, `section-navigation.js` ni `api/youtube-search.js`. No se ha observado un deployment posterior a la fusión. Por tanto, el código está en GitHub, pero la nueva versión no está publicada en producción.
-- La ficha del proyecto Vercel no expone un vínculo Git a este repositorio y la consulta de variables de entorno devuelve una lista vacía.
+- El commit exacto `3b6ec81a353d2dfd477895066257075ac7bfc7e8` se desplegó en Preview como `dpl_Ft18Xuxe5v3UYRX19wiwRVjj9HeF` y después en Production como `dpl_9togGRra2CEfUmgBBBK6YyLGpLgP`.
+- El deployment de producción está `READY`; el alias `monjes-rumberos.vercel.app` se resolvió y apunta a `dpl_9togGRra2CEfUmgBBBK6YyLGpLgP`. La URL pública respondió HTTP 200 y sirvió `youtube-player.js` y `section-navigation.js`.
+- El Preview y Production se construyeron desde el mismo commit de GitHub. El build de Vercel ejecutó `npm run build`, generó `public/` y reportó 16 assets de escena.
+- El proyecto Vercel no figura vinculado a GitHub como integración persistente; el deployment se lanzó desde Git source con SHA explícito. Los futuros pushes a `main` no deben darse por auto-publicados hasta conectar Git en la configuración del proyecto.
+- La lista de variables de entorno consultada está vacía; no se ha configurado `YOUTUBE_API_KEY`.
 
-### Pendiente para activación real
+### Validación de la función en producción
 
-- No se ha proporcionado ni configurado `YOUTUBE_API_KEY`. La función responde deliberadamente con HTTP 503 y un mensaje claro mientras falte la variable. Las pruebas verifican el contrato con respuestas simuladas; **la búsqueda real y la reproducción real todavía no se han probado contra Google/YouTube**.
-- Falta habilitar YouTube Data API v3 en Google Cloud, crear una clave restringida a esa API y añadirla en Vercel como `YOUTUBE_API_KEY` únicamente en el entorno Preview.
-- Después habrá que vincular el repositorio al proyecto Vercel correcto o crear un Preview controlado, probar la función y el reproductor reales, y revisar cuota/errores antes de plantear cualquier promoción.
+- `GET /api/youtube-search?q=daft%20punk` devuelve HTTP 503 con el código `youtube_not_configured` y el mensaje de configuración pendiente. Esto confirma que la función está desplegada y que falta la variable, no que el endpoint esté ausente.
+- Las pruebas automatizadas de GitHub cubren la función con `fetch` simulado. **La búsqueda real y la reproducción real todavía no se han probado contra Google/YouTube**.
+- El Preview sin clave se comprobó por HTTP: página principal, scripts de reproductor/navegación y assets WebP respondieron HTTP 200; el endpoint devolvió el 503 esperado.
 
-No se debe incluir la clave en el repositorio, en HTML ni en variables públicas. No se ha modificado el alias productivo ni se ha desplegado esta versión a producción.
+### Pendiente para activar la música
 
-## Protección Git
+1. Habilitar YouTube Data API v3 en Google Cloud y crear una API key estándar restringida a esa API.
+2. Añadir `YOUTUBE_API_KEY` en Vercel para Preview y generar un nuevo Preview del commit integrado.
+3. Probar una búsqueda real, la elegibilidad de vídeos y la reproducción en el IFrame Player oficial.
+4. Tras validar, añadir la misma variable al entorno Production y crear un nuevo deployment de producción para que la función la reciba.
 
-PR #1 ya está fusionado. Cualquier corrección posterior debe realizarse en una rama nueva basada en `main` y pasar por su propio PR. No modificar directamente `main`, no promover Preview a Production y no cambiar el dominio productivo sin autorización explícita. La clave `YOUTUBE_API_KEY` debe configurarse únicamente en Vercel, en Preview, cuando esté disponible.
+No se debe incluir la clave en el repositorio, HTML, variables públicas ni mensajes. La clave se usa desde la función server-side mediante `x-goog-api-key`.
+
+## Protección Git y producción
+
+PR #1 está fusionado y la versión actual está publicada. PR #2 sigue en borrador y solo contiene documentación. Cualquier corrección de código debe realizarse en una rama nueva basada en `main` y pasar por su propio PR. No cambiar el dominio productivo ni promover un Preview sin validación y autorización explícita.
 
