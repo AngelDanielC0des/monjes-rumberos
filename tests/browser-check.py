@@ -113,6 +113,20 @@ with sync_playwright() as p:
         timeout=3000,
     )
 
+    # Browser history must restore explicit section navigation.
+    page.evaluate('window.history.back()')
+    page.wait_for_function("location.hash === '#manifiesto'", timeout=3000)
+    page.evaluate('window.history.back()')
+    page.wait_for_function("location.hash === '#sonido'", timeout=3000)
+    page.evaluate('window.history.forward()')
+    page.wait_for_function("location.hash === '#manifiesto'", timeout=3000)
+    page.evaluate("window.location.hash = '#booking'")
+    page.wait_for_function("location.hash === '#booking'", timeout=3000)
+    page.wait_for_function(
+        "Math.abs(document.querySelector('#booking').getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop || 0)) < 5",
+        timeout=3000,
+    )
+
     # Interactive controls retain their native arrow-key behavior.
     arrow_was_prevented = page.locator('#booking-form textarea').evaluate("""element => {
       element.focus();
