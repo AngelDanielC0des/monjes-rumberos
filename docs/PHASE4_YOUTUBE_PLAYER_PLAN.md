@@ -129,7 +129,7 @@ Entregables implementados:
 ### Pendiente para activación real
 
 - No se ha proporcionado ni configurado `YOUTUBE_API_KEY`. La función responde deliberadamente con HTTP 503 y un mensaje claro mientras falte la variable. Las pruebas validan el contrato con respuestas simuladas; **la búsqueda real y la reproducción real todavía no se han probado contra Google/YouTube**.
-- El contexto de Vercel conectado no muestra un proyecto asociado a este repositorio. No se ha creado un proyecto ni un Preview Deployment.
+- El proyecto Vercel `monjes-rumberos` existe y conserva el dominio productivo `monjes-rumberos.vercel.app`, pero su ficha no expone un vínculo Git con este repositorio. La lista de variables de entorno está vacía; no existe `YOUTUBE_API_KEY`. No se ha creado un Preview Deployment ni se ha modificado ningún deployment existente.
 - Para validar la integración real, el propietario debe habilitar YouTube Data API v3 en Google Cloud, crear una clave restringida a esa API y añadirla en Vercel como `YOUTUBE_API_KEY` en el entorno Preview. Después habrá que vincular el repositorio a un proyecto Vercel y probar el Preview.
 
 Producción permanece intacta: PR #1 sigue en borrador, no está fusionado y no se ha desplegado.
