@@ -38,6 +38,9 @@ jobs:
           npm run check
           npm run test:smoke
 
+      - name: YouTube API unit tests
+        run: npm run test:youtube-api
+
       - name: Animated WebP interpolation regression
         run: python tests/dance-webp-test.py
 
@@ -52,4 +55,5 @@ jobs:
           test -s public/assets/monks/dance/monje-left-dance.webp
           test -s public/assets/monks/dance/monje-right-dance.webp
           test -s public/section-navigation.js
-          test "$(find public -type f | wc -l | tr -d ' ')" -eq 40
+          test -s public/youtube-player.js
+          test "$(find public -type f | wc -l | tr -d ' ')" -eq 41
