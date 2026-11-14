@@ -39,9 +39,12 @@
 
   function playerDimensions() {
     const availableWidth = Math.max(200, Math.floor(playerFrame.clientWidth || 480));
+    const viewportHeightBudget = Math.max(200, Math.floor(window.innerHeight * 0.58));
+    const widthForHeight = Math.floor(viewportHeightBudget * 16 / 9);
+    const width = Math.max(200, Math.min(480, availableWidth, widthForHeight));
     return {
-      width: availableWidth,
-      height: Math.max(200, Math.round(availableWidth * 9 / 16)),
+      width,
+      height: Math.max(200, Math.round(width * 9 / 16)),
     };
   }
 
