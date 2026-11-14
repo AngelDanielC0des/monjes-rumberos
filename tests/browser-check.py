@@ -66,7 +66,6 @@ with sync_playwright() as p:
     page.add_script_tag(content=scroll_scenes_source)
     page.add_script_tag(content=performer_motion_source)
     page.add_script_tag(content=performer_settings_source)
-    page.add_script_tag(content=performer_settings_source)
     page.add_script_tag(content="""
       window.__youtubeTestFetches = [];
       const originalFetch = window.fetch.bind(window);
