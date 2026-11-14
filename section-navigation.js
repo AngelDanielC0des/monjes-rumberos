@@ -181,7 +181,7 @@
   }
 
   motionQuery.addEventListener?.('change', (event) => {
-    if (event.matches) document.documentElement.style.scrollBehavior = 'auto';
+    document.documentElement.style.scrollBehavior = event.matches ? 'auto' : '';
   });
 
   measureActiveSection();
