@@ -21,7 +21,7 @@ Auditar el resultado integrado de las fases 0–4 y preparar la validación real
 - HEAD de la rama del PR: `13c1e567e80df3b5db5f5f61d9c2a77ea239bcb3`.
 - Base original del PR: `2448be30dc88d4b58606f2f3cfd1d975d6dfecb6`.
 - PR #1 integró 87 commits y 32 archivos. La lista de cambios se limita a la landing, sus assets de baile, scripts, pruebas, CI y documentación de las fases 0–5.
-- No se ha realizado ningún commit directo adicional en `main`. Esta auditoría documental continúa en una rama nueva basada en el commit de integración.
+- No se ha realizado ningún commit directo adicional en `main`. Esta auditoría documental continúa en una rama nueva basada en el commit de integración. PR #2 está abierto en borrador y contiene únicamente las dos actualizaciones documentales de Fases 4 y 5.
 
 ### B. CI, pruebas y build
 
@@ -96,7 +96,7 @@ La documentación oficial consultada confirma que `search.list` dispone de un bu
 - Revisión manual visual y de accesibilidad completada.
 - Limitaciones y SHA exacto documentados.
 
-Los dos primeros criterios están cumplidos en esta auditoría. Los tres restantes siguen bloqueados por la configuración de Google Cloud/Vercel y la revisión manual.
+El CI del commit integrado en `main` está en verde y el informe Git/Vercel está actualizado. La CI de este PR documental se comprobará sobre su último commit antes de solicitar su integración. La validación Preview y la revisión manual siguen bloqueadas por la configuración de Google Cloud/Vercel.
 
 ## Protección de producción
 
