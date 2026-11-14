@@ -26,7 +26,7 @@ No se utilizarán scraping de resultados de YouTube, endpoints privados, extracc
 - La función consulta Google desde el servidor y envía la clave mediante el encabezado `x-goog-api-key`, evitando ponerla en la URL.
 - Validar método, longitud y contenido de la búsqueda; limitar a seis resultados; normalizar el texto; manejar cuota agotada, clave ausente, timeout, errores upstream y respuestas malformadas.
 - Devolver un DTO pequeño y estable: ID, título, canal, miniatura y URL canónica de YouTube. No devolver la clave ni la respuesta completa de Google.
-- Cachear las búsquedas durante un periodo breve en CDN y mantener una caché de sesión en cliente. No usar paginación en V1.
+- Cachear las búsquedas durante 120 segundos en CDN. No guardar el historial de búsquedas en el navegador ni usar paginación en V1.
 - La función no realiza búsquedas automáticas por cada pulsación: solo se consulta al enviar el formulario, con Enter o botón.
 
 ### 2. Consulta oficial y elegibilidad
@@ -45,8 +45,8 @@ Después, una única llamada `videos.list` por búsqueda comprobará en lote los
 
 ### 3. Reproductor
 
-- Cargar `https://www.youtube.com/iframe_api` de forma diferida, solo al abrir el reproductor y seleccionar un vídeo.
-- Crear un único `YT.Player` reutilizable; cambiar de vídeo con `loadVideoById` o `cueVideoById`, sin recrear iframes en cada búsqueda.
+- Cargar `https://www.youtube.com/iframe_api` solo después de una búsqueda explícita que devuelva al menos un vídeo elegible.
+- Crear un único `YT.Player` reutilizable con el primer resultado en pausa (`autoplay=0`). La acción del usuario sobre «Reproducir» llama a `loadVideoById` directamente; las búsquedas posteriores reutilizan el mismo reproductor.
 - Parámetros iniciales: `controls=1`, `autoplay=0`, `playsinline=1` y `origin` con el origen exacto del sitio.
 - La reproducción comienza únicamente tras una acción explícita del usuario. Gestionar `onReady`, `onStateChange`, `onError` y `onAutoplayBlocked`.
 - Conservar los controles y la marca oficiales de YouTube. No colocar overlays sobre el reproductor ni ocultar sus controles.
@@ -57,7 +57,7 @@ Después, una única llamada `videos.list` por búsqueda comprobará en lote los
 - Añadir el botón de música inmediatamente a la izquierda del botón flotante de ajustes, agrupando ambos controles sin alterar la posición visual actual del botón de ajustes.
 - Botón con nombre accesible, `aria-expanded` y `aria-controls`.
 - Panel de reproductor anclado al grupo flotante, con búsqueda, estado de carga, errores, resultados y reproductor.
-- Un solo panel flotante abierto a la vez: abrir música cierra ajustes y abrir ajustes cierra música. Escape cierra el panel activo y devuelve el foco al botón que lo abrió.
+- Un solo panel flotante abierto a la vez: abrir música cierra ajustes y abrir ajustes cierra música. Escape cierra el panel activo y devuelve el foco al botón que lo abrió; al cerrar por clic exterior, el foco no queda dentro del panel oculto.
 - Resultados como lista semántica, título y canal visibles, miniatura con texto alternativo apropiado y botón «Reproducir».
 - Mensajes de carga, ausencia de resultados, error de API, vídeo no disponible y cuota agotada mediante una región `aria-live="polite"`.
 - En escritorio, reservar un reproductor de aproximadamente 480 × 270 px. En móvil, adaptar el ancho al viewport y permitir scroll interno del panel sin ocultar el reproductor ni sus controles.
@@ -113,6 +113,26 @@ No se inventará ni se escribirá ninguna clave en el repositorio.
 5. Resolver la coordinación entre paneles y el diseño responsive.
 6. Ejecutar pruebas de seguridad, cuota, accesibilidad, Chromium y build.
 7. Documentar configuración de Google Cloud/Vercel y validar un Preview Deployment.
+
+## Estado de implementación
+
+**FASE 4 IMPLEMENTADA Y VERIFICADA EN CI.** Commit validado: `d5ff15a65e3cbe4f15994cd2b560d696c4abeea0`. GitHub Actions: [run 43556935180 — success](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43556935180).
+
+Entregables implementados:
+
+- `api/youtube-search.js`: Vercel Function GET, clave solo en servidor, búsqueda oficial, filtro de vídeos incrustables, comprobación Made for Kids, límite de consulta, timeout, errores, cache CDN y rechazo de peticiones cross-origin.
+- `youtube-player.js`: panel accesible, búsqueda explícita, inicialización diferida, un solo reproductor, reproducción por acción del usuario, pausa al cerrar/ocultar la pestaña y coordinación con ajustes.
+- `index.html` y `styles.css`: botón junto a ajustes, panel responsive, reproductor de al menos 200 × 200 px incluso en orientación horizontal de poca altura.
+- Tests API con `fetch` simulado y regresión Chromium con IFrame Player API simulada. No se consume cuota real en CI.
+- El build estático contiene 41 archivos y excluye `api/youtube-search.js` del directorio público.
+
+### Pendiente para activación real
+
+- No se ha proporcionado ni configurado `YOUTUBE_API_KEY`. La función responde deliberadamente con HTTP 503 y un mensaje claro mientras falte la variable. Las pruebas validan el contrato con respuestas simuladas; **la búsqueda real y la reproducción real todavía no se han probado contra Google/YouTube**.
+- El contexto de Vercel conectado no muestra un proyecto asociado a este repositorio. No se ha creado un proyecto ni un Preview Deployment.
+- Para validar la integración real, el propietario debe habilitar YouTube Data API v3 en Google Cloud, crear una clave restringida a esa API y añadirla en Vercel como `YOUTUBE_API_KEY` en el entorno Preview. Después habrá que vincular el repositorio a un proyecto Vercel y probar el Preview.
+
+Producción permanece intacta: PR #1 sigue en borrador, no está fusionado y no se ha desplegado.
 
 ## Protección Git
 
