@@ -524,6 +524,12 @@ with sync_playwright() as p:
     page.emulate_media(reduced_motion='reduce')
     motion_duration = page.evaluate("getComputedStyle(document.querySelector('.corner-light')).animationDuration")
     assert motion_duration in ('1e-05s', '0.00001s', '0.01ms', '0s'), motion_duration
+    page.evaluate("window.MonjesSectionNavigation.go('booking')")
+    reduced_navigation = page.evaluate("""() => ({
+      enabled: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      scrollBehavior: getComputedStyle(document.documentElement).scrollBehavior
+    })""")
+    assert reduced_navigation == {'enabled': True, 'scrollBehavior': 'auto'}, reduced_navigation
     reduced_color = page.evaluate("""() => {
       const a = document.querySelector('#inicio').getBoundingClientRect();
       const b = document.querySelector('#manifiesto').getBoundingClientRect();
