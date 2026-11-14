@@ -118,13 +118,17 @@ with sync_playwright() as p:
     assert player_panel.is_visible()
     assert player_toggle.get_attribute('aria-expanded') == 'true'
     page.wait_for_function(
-        "window.__fakeYouTubePlayer && !document.querySelector('#youtube-search-input').disabled",
-        timeout=3000,
+        "!document.querySelector('#youtube-search-input').disabled",
+        timeout=1000,
     )
+    assert page.evaluate("window.__fakeYouTubePlayer === null")
     assert page.locator('#youtube-player iframe').count() == 0
     page.locator('#youtube-search-input').fill('house music')
     page.locator('#youtube-search-submit').click()
-    page.wait_for_function("document.querySelectorAll('.youtube-result').length === 1", timeout=3000)
+    page.wait_for_function(
+        "window.__fakeYouTubePlayer && document.querySelectorAll('.youtube-result').length === 1 && !document.querySelector('.youtube-result__play').disabled",
+        timeout=3000,
+    )
     page.locator('.youtube-result__play').click()
     page.wait_for_function(
         "window.__fakeYouTubePlayer.loadedVideoIds.includes('abcdefghijk')",
