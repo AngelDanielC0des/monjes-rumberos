@@ -14,6 +14,7 @@ js_source = (ROOT / 'app.js').read_text(encoding='utf-8')
 performer_motion_source = (ROOT / 'performer-motion.js').read_text(encoding='utf-8')
 performer_settings_source = (ROOT / 'performer-settings.js').read_text(encoding='utf-8')
 section_navigation_source = (ROOT / 'section-navigation.js').read_text(encoding='utf-8')
+youtube_player_source = (ROOT / 'youtube-player.js').read_text(encoding='utf-8')
 scroll_scenes_source = (ROOT / 'scroll-scenes.js').read_text(encoding='utf-8')
 
 
@@ -43,6 +44,7 @@ html_source = html_source.replace('  <script src="/app.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/performer-motion.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/performer-settings.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/section-navigation.js" defer></script>', '')
+html_source = html_source.replace('  <script src="/youtube-player.js" defer></script>', '')
 html_source = re.sub(r'^\s*<link rel="preconnect"[^>]*>\s*$', '', html_source, flags=re.MULTILINE)
 html_source = re.sub(r'^\s*<link href="https://fonts\.googleapis\.com[^\n]+\n', '', html_source, flags=re.MULTILINE)
 html_source = re.sub(r'^\s*<link rel="preload"[^>]*>\s*$', '', html_source, flags=re.MULTILINE)
@@ -64,9 +66,95 @@ with sync_playwright() as p:
     page.add_script_tag(content=scroll_scenes_source)
     page.add_script_tag(content=performer_motion_source)
     page.add_script_tag(content=performer_settings_source)
+    page.add_script_tag(content=performer_settings_source)
+    page.add_script_tag(content="""
+      window.__youtubeTestFetches = [];
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = async (input, init) => {
+        if (String(input).startsWith('/api/youtube-search')) {
+          window.__youtubeTestFetches.push(String(input));
+          return new Response(JSON.stringify({ items: [{
+            id: 'abcdefghijk',
+            title: 'House Mix Test',
+            channelTitle: 'Test Channel',
+            thumbnailUrl: 'https://i.ytimg.com/vi/abcdefghijk/mqdefault.jpg',
+            url: 'https://www.youtube.com/watch?v=abcdefghijk'
+          }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        }
+        return originalFetch(input, init);
+      };
+      window.__fakeYouTubePlayer = null;
+      window.YT = {
+        PlayerState: { ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3 },
+        Player: class {
+          constructor(_target, options) {
+            this.options = options;
+            this.loadedVideoIds = [];
+            this.pauseCalls = 0;
+            this.playCalls = 0;
+            this.sizes = [];
+            window.__fakeYouTubePlayer = this;
+            queueMicrotask(() => options.events.onReady({ target: this }));
+          }
+          setSize(width, height) { this.sizes.push({ width, height }); }
+          loadVideoById(id) { this.loadedVideoIds.push(id); }
+          pauseVideo() { this.pauseCalls += 1; }
+          playVideo() { this.playCalls += 1; }
+          destroy() {}
+        }
+      };
+    """)
+    page.add_script_tag(content=youtube_player_source)
     page.add_script_tag(content=section_navigation_source)
     page.add_script_tag(content=js_source)
     page.wait_for_timeout(200)
+
+    print('browser-check: official YouTube player interaction', flush=True)
+    player_toggle = page.locator('#youtube-player-toggle')
+    player_panel = page.locator('#youtube-player-panel')
+    assert player_toggle.get_attribute('aria-expanded') == 'false'
+    assert player_panel.is_hidden()
+    player_toggle.click()
+    assert player_panel.is_visible()
+    assert player_toggle.get_attribute('aria-expanded') == 'true'
+    page.wait_for_function(
+        "window.__fakeYouTubePlayer && !document.querySelector('#youtube-search-input').disabled",
+        timeout=3000,
+    )
+    assert page.locator('#youtube-player iframe').count() == 0
+    page.locator('#youtube-search-input').fill('house music')
+    page.locator('#youtube-search-submit').click()
+    page.wait_for_function("document.querySelectorAll('.youtube-result').length === 1", timeout=3000)
+    page.locator('.youtube-result__play').click()
+    page.wait_for_function(
+        "window.__fakeYouTubePlayer.loadedVideoIds.includes('abcdefghijk')",
+        timeout=2000,
+    )
+    player_calls = page.evaluate("""() => ({
+      searches: window.__youtubeTestFetches.length,
+      loaded: window.__fakeYouTubePlayer.loadedVideoIds.length,
+      playCalls: window.__fakeYouTubePlayer.playCalls,
+      iframeApiControls: window.__fakeYouTubePlayer.options.playerVars.controls,
+      iframeApiAutoplay: window.__fakeYouTubePlayer.options.playerVars.autoplay
+    })""")
+    assert player_calls == {
+      'searches': 1, 'loaded': 1, 'playCalls': 0,
+      'iframeApiControls': 1, 'iframeApiAutoplay': 0
+    }, player_calls
+    page.keyboard.press('Escape')
+    assert player_panel.is_hidden()
+    assert player_toggle.get_attribute('aria-expanded') == 'false'
+    assert page.evaluate("document.activeElement.id") == 'youtube-player-toggle'
+
+    page.locator('.performer-settings-toggle').click()
+    assert page.locator('#performer-settings').is_visible()
+    player_toggle.click()
+    assert player_panel.is_visible()
+    assert page.locator('#performer-settings').is_hidden()
+    page.locator('.performer-settings-toggle').click()
+    assert player_panel.is_hidden()
+    assert page.locator('#performer-settings').is_visible()
+    page.locator('.performer-settings__close').click()
 
     print('browser-check: accessible section navigation', flush=True)
     section_ids = page.locator('main#contenido > section').evaluate_all(
@@ -516,6 +604,17 @@ with sync_playwright() as p:
             last_menu_link.click()
             page.wait_for_function("location.hash === '#booking' && document.activeElement.id === 'booking'", timeout=3000)
             assert button.get_attribute('aria-expanded') == 'false'
+            if width == 568:
+                player_toggle.click()
+                page.wait_for_function(
+                    "window.__fakeYouTubePlayer && !document.querySelector('#youtube-search-input').disabled",
+                    timeout=3000,
+                )
+                player_geometry = page.locator('#youtube-player-frame').bounding_box()
+                assert player_geometry['width'] >= 200 and player_geometry['height'] >= 200, {
+                    'width': width, 'height': height, 'player': player_geometry
+                }
+                page.keyboard.press('Escape')
         else:
             assert data['framePosition'] == 'fixed', data
             assert all(image['width'] > image['height'] for image in data['images']), data
