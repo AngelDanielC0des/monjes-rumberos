@@ -32,6 +32,8 @@
   <script src="/scroll-scenes.js" defer></script>
   <script src="/performer-motion.js" defer></script>
   <script src="/performer-settings.js" defer></script>
+  <script src="/youtube-player.js" defer></script>
+  <script src="/section-navigation.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -78,6 +80,14 @@
     </button>
   </div>
 
+  <button class="youtube-player-toggle" id="youtube-player-toggle" type="button"
+    aria-label="Abrir reproductor de YouTube" aria-controls="youtube-player-panel" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 9.5v5a2 2 0 0 0 2 2h1.5l3.2 2.6a1 1 0 0 0 1.6-.8V5.7a1 1 0 0 0-1.6-.8L7.5 7.5H6a2 2 0 0 0-2 2Z"/>
+      <path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/>
+    </svg>
+  </button>
+
   <button class="performer-settings-toggle" type="button" aria-label="Abrir ajustes de los monjes"
     aria-controls="performer-settings" aria-expanded="false">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -111,6 +121,35 @@
     <p class="performer-settings__footnote">Puedes volver a abrir este panel desde el botón de ajustes, aunque los monjes estén ocultos.</p>
   </aside>
 
+  <aside class="youtube-player-panel" id="youtube-player-panel" role="dialog" aria-modal="false"
+    aria-labelledby="youtube-player-title" aria-describedby="youtube-player-description" hidden>
+    <div class="youtube-player-panel__topline">
+      <div>
+        <span class="youtube-player-panel__eyebrow">MÚSICA PARA LA PISTA</span>
+        <h2 id="youtube-player-title">Elige el ritmo.</h2>
+      </div>
+      <button class="youtube-player-panel__close" type="button" aria-label="Cerrar reproductor de YouTube">×</button>
+    </div>
+    <p class="youtube-player-panel__description" id="youtube-player-description">Busca vídeos musicales y reprodúcelos desde el reproductor oficial de YouTube.</p>
+    <div class="youtube-player-panel__frame" id="youtube-player-frame">
+      <div id="youtube-player" aria-label="Reproductor oficial de YouTube"></div>
+    </div>
+    <p class="youtube-player-panel__current" id="youtube-current-track">Selecciona un resultado para cargarlo aquí.</p>
+    <form class="youtube-search-form" id="youtube-search-form" role="search">
+      <label for="youtube-search-input">Buscar en YouTube</label>
+      <div class="youtube-search-form__row">
+        <input id="youtube-search-input" name="q" type="search" maxlength="80" minlength="2"
+          placeholder="Artista, canción o estilo…" autocomplete="off" required disabled>
+        <button id="youtube-search-submit" type="submit" disabled>Buscar</button>
+      </div>
+    </form>
+    <p class="youtube-player-panel__status" id="youtube-search-status" role="status" aria-live="polite">
+      Abre el panel para preparar el reproductor.
+    </p>
+    <ul class="youtube-search-results" id="youtube-search-results" aria-label="Resultados de búsqueda de YouTube"></ul>
+    <p class="youtube-player-panel__footnote">La reproducción utiliza el reproductor y los controles oficiales de YouTube. Al cerrar este panel, el vídeo se pausa.</p>
+  </aside>
+
   <header class="site-header">
     <a class="brand-lockup" href="#inicio" aria-label="Monjes Rumberos, volver al inicio">
       <span class="brand-seal" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M7 23c1.4-8 4.7-13 9-17 4.3 4 7.6 9 9 17-3 4-6 6-9 6s-6-2-9-6Z" stroke="currentColor" stroke-width="1.25"/><path d="M12 22v-6m4 6v-9m4 9v-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 2v3M3 9l3 1M29 9l-3 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
@@ -120,6 +159,7 @@
       <a href="#manifiesto">Manifiesto</a>
       <a href="#ritual">El ritual</a>
       <a href="#formatos">Formatos</a>
+      <a href="#sonido">Pulso electrónico</a>
       <a class="nav-booking" href="#booking">Booking <span aria-hidden="true">↗</span></a>
     </nav>
     <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
@@ -130,7 +170,8 @@
     <a href="#manifiesto">Manifiesto <span>01</span></a>
     <a href="#ritual">El ritual <span>02</span></a>
     <a href="#formatos">Formatos <span>03</span></a>
-    <a href="#booking">Booking <span>04</span></a>
+    <a href="#sonido">Pulso electrónico <span>04</span></a>
+    <a href="#booking">Booking <span>05</span></a>
   </nav>
 
   <main id="contenido" class="page-shell">
@@ -271,7 +312,7 @@
       </div>
     </section>
 
-    <section class="sound section-block" aria-labelledby="sound-title" data-reveal data-scene="sound">
+    <section class="sound section-block" id="sonido" aria-labelledby="sound-title" data-reveal data-scene="sound">
       <div class="sound-panel section-scene scene--sound">
         <div class="scene-media" aria-hidden="true">
           <picture>

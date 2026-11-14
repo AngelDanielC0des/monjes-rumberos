@@ -8,15 +8,15 @@
       "animation": {
         "file": "assets/monks/dance/monje-left-dance.webp",
         "format": "animated WebP",
-        "frames": 9,
-        "frameDurationMs": 280,
+        "frames": 63,
+        "frameDurationMs": 40,
         "loop": 0,
         "dimensions": [
           360,
           402
         ],
-        "bytes": 129818,
-        "sha256": "9882399e87c46a49b447aed7faa13f197eb436cf3feee479b8d35d6a84d75b64",
+        "bytes": 1002118,
+        "sha256": "0b2aeb2c4b83135858092795367a50217683db7601e4bea3f785873d7b1e6a01",
         "totalDurationMs": 2520
       },
       "poster": {
@@ -29,32 +29,36 @@
         "bytes": 14364,
         "sha256": "c5e0915fa443fec1fe6b6f59be1f9833d4553930b6ad4d045f1bed983c6c9c67"
       },
-      "source": "assets/source/monje-left-dance-source.gif",
-      "sourceFormat": "GIF",
+      "source": "assets/monks/dance/source/monje-left-dance-original.webp",
+      "sourceFormat": "animated WebP",
       "notes": [
-        "Generated full-body dance cycle; not a skeletal Rive rig.",
-        "Static poster is used for pause, reduced-motion preference, hidden tabs and no-JavaScript fallback."
+        "25 FPS animated WebP interpolated with RIFE v4.9 ONNX.",
+        "Original source poses are preserved at every seventh output frame.",
+        "RGB is interpolated premultiplied; the alpha mask is interpolated separately.",
+        "The legacy GIF fallback is retained unchanged for older browsers.",
+        "The static poster remains the pause, reduced-motion, hidden-tab and no-JavaScript fallback."
       ],
       "fallback": {
         "file": "assets/monks/dance/monje-left-dance.gif",
         "format": "GIF",
         "bytes": 296096,
         "sha256": "f5baa5526c7d24d2bc9c480379d5441173350bcbf660700635744833ff4eb2fa"
-      }
+      },
+      "sourceSha256": "9882399e87c46a49b447aed7faa13f197eb436cf3feee479b8d35d6a84d75b64"
     },
     "right": {
       "animation": {
         "file": "assets/monks/dance/monje-right-dance.webp",
         "format": "animated WebP",
-        "frames": 9,
-        "frameDurationMs": 280,
+        "frames": 63,
+        "frameDurationMs": 40,
         "loop": 0,
         "dimensions": [
           385,
           418
         ],
-        "bytes": 157672,
-        "sha256": "dd94a230830699bb4d1abe0fa5f33d189a2e699ad9ba2902d0c04c92532695b2",
+        "bytes": 1225764,
+        "sha256": "2d3e5ad650c93aae685c5fe4314bdc874e674c413e2a4137d772cbfc7e5201b8",
         "totalDurationMs": 2520
       },
       "poster": {
@@ -67,18 +71,32 @@
         "bytes": 19044,
         "sha256": "6704baf1958656d890a2c6a48689e1b1eb3619925638e790b2929440441a2865"
       },
-      "source": "assets/source/monje-right-dance-source.gif",
-      "sourceFormat": "GIF",
+      "source": "assets/monks/dance/source/monje-right-dance-original.webp",
+      "sourceFormat": "animated WebP",
       "notes": [
-        "Generated full-body dance cycle; not a skeletal Rive rig.",
-        "Static poster is used for pause, reduced-motion preference, hidden tabs and no-JavaScript fallback."
+        "25 FPS animated WebP interpolated with RIFE v4.9 ONNX.",
+        "Original source poses are preserved at every seventh output frame.",
+        "RGB is interpolated premultiplied; the alpha mask is interpolated separately.",
+        "The legacy GIF fallback is retained unchanged for older browsers.",
+        "The static poster remains the pause, reduced-motion, hidden-tab and no-JavaScript fallback."
       ],
       "fallback": {
         "file": "assets/monks/dance/monje-right-dance.gif",
         "format": "GIF",
         "bytes": 317256,
         "sha256": "640c92aa1c144d11c1037be0f2614807f2d042ff67fe4c5648d8ab7a20ff6dd5"
-      }
+      },
+      "sourceSha256": "dd94a230830699bb4d1abe0fa5f33d189a2e699ad9ba2902d0c04c92532695b2"
     }
+  },
+  "interpolation": {
+    "algorithm": "RIFE v4.9 ONNX",
+    "modelRepository": "https://huggingface.co/edgetools/rife",
+    "modelRevision": "18dcfbe2c349d5922e353708153581d2039c576c",
+    "modelLicense": "MIT (see upstream model card and LICENSE)",
+    "modelSha256": "76e4cef9ab42fa7dd4e8f6e4aba47462051e3faa969e4bca6479784fbab0ac6f",
+    "targetFps": 25,
+    "frameDurationMs": 40,
+    "alphaStrategy": "separate RIFE interpolation of premultiplied RGB and alpha mask"
   }
 }

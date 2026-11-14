@@ -13,6 +13,8 @@ layout_css_source = (ROOT / 'layout-fix.css').read_text(encoding='utf-8')
 js_source = (ROOT / 'app.js').read_text(encoding='utf-8')
 performer_motion_source = (ROOT / 'performer-motion.js').read_text(encoding='utf-8')
 performer_settings_source = (ROOT / 'performer-settings.js').read_text(encoding='utf-8')
+section_navigation_source = (ROOT / 'section-navigation.js').read_text(encoding='utf-8')
+youtube_player_source = (ROOT / 'youtube-player.js').read_text(encoding='utf-8')
 scroll_scenes_source = (ROOT / 'scroll-scenes.js').read_text(encoding='utf-8')
 
 
@@ -41,6 +43,8 @@ html_source = html_source.replace('  <link rel="stylesheet" href="/layout-fix.cs
 html_source = html_source.replace('  <script src="/app.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/performer-motion.js" defer></script>', '')
 html_source = html_source.replace('  <script src="/performer-settings.js" defer></script>', '')
+html_source = html_source.replace('  <script src="/section-navigation.js" defer></script>', '')
+html_source = html_source.replace('  <script src="/youtube-player.js" defer></script>', '')
 html_source = re.sub(r'^\s*<link rel="preconnect"[^>]*>\s*$', '', html_source, flags=re.MULTILINE)
 html_source = re.sub(r'^\s*<link href="https://fonts\.googleapis\.com[^\n]+\n', '', html_source, flags=re.MULTILINE)
 html_source = re.sub(r'^\s*<link rel="preload"[^>]*>\s*$', '', html_source, flags=re.MULTILINE)
@@ -62,10 +66,211 @@ with sync_playwright() as p:
     page.add_script_tag(content=scroll_scenes_source)
     page.add_script_tag(content=performer_motion_source)
     page.add_script_tag(content=performer_settings_source)
+    page.add_script_tag(content="""
+      window.__youtubeTestFetches = [];
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = async (input, init) => {
+        if (String(input).startsWith('/api/youtube-search')) {
+          window.__youtubeTestFetches.push(String(input));
+          return new Response(JSON.stringify({ items: [{
+            id: 'abcdefghijk',
+            title: 'House Mix Test',
+            channelTitle: 'Test Channel',
+            thumbnailUrl: 'https://i.ytimg.com/vi/abcdefghijk/mqdefault.jpg',
+            url: 'https://www.youtube.com/watch?v=abcdefghijk'
+          }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        }
+        return originalFetch(input, init);
+      };
+      window.__fakeYouTubePlayer = null;
+      window.YT = {
+        PlayerState: { ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3 },
+        Player: class {
+          constructor(_target, options) {
+            this.options = options;
+            this.loadedVideoIds = [];
+            this.pauseCalls = 0;
+            this.playCalls = 0;
+            this.sizes = [];
+            window.__fakeYouTubePlayer = this;
+            queueMicrotask(() => options.events.onReady({ target: this }));
+          }
+          setSize(width, height) { this.sizes.push({ width, height }); }
+          loadVideoById(id) { this.loadedVideoIds.push(id); }
+          pauseVideo() { this.pauseCalls += 1; }
+          playVideo() { this.playCalls += 1; }
+          destroy() {}
+        }
+      };
+    """)
+    page.add_script_tag(content=youtube_player_source)
+    page.add_script_tag(content=section_navigation_source)
     page.add_script_tag(content=js_source)
     page.wait_for_timeout(200)
 
-    for width, height in [(2048, 1134), (1440, 900), (1024, 768), (768, 900), (390, 844), (320, 740)]:
+    print('browser-check: official YouTube player interaction', flush=True)
+    player_toggle = page.locator('#youtube-player-toggle')
+    player_panel = page.locator('#youtube-player-panel')
+    assert player_toggle.get_attribute('aria-expanded') == 'false'
+    assert player_panel.is_hidden()
+    player_toggle.click()
+    assert player_panel.is_visible()
+    assert player_toggle.get_attribute('aria-expanded') == 'true'
+    page.wait_for_function(
+        "!document.querySelector('#youtube-search-input').disabled",
+        timeout=1000,
+    )
+    assert page.evaluate("window.__fakeYouTubePlayer === null")
+    assert page.locator('#youtube-player iframe').count() == 0
+    page.locator('#youtube-search-input').fill('house music')
+    page.locator('#youtube-search-submit').click()
+    try:
+        page.wait_for_function(
+            "window.__fakeYouTubePlayer && document.querySelectorAll('.youtube-result').length === 1 && !document.querySelector('.youtube-result__play').disabled",
+            timeout=5000,
+        )
+    except Exception:
+        debug_state = page.evaluate("""() => ({
+          status: document.querySelector('#youtube-search-status')?.textContent,
+          fetches: window.__youtubeTestFetches,
+          results: document.querySelectorAll('.youtube-result').length,
+          playerCreated: Boolean(window.__fakeYouTubePlayer),
+          inputDisabled: document.querySelector('#youtube-search-input')?.disabled,
+          submitDisabled: document.querySelector('#youtube-search-submit')?.disabled,
+          playerButtonDisabled: document.querySelector('.youtube-result__play')?.disabled
+        })""")
+        print('YouTube player debug state:', debug_state, flush=True)
+        raise
+    page.locator('.youtube-result__play').click()
+    page.wait_for_function(
+        "window.__fakeYouTubePlayer.loadedVideoIds.includes('abcdefghijk')",
+        timeout=2000,
+    )
+    player_calls = page.evaluate("""() => ({
+      searches: window.__youtubeTestFetches.length,
+      loaded: window.__fakeYouTubePlayer.loadedVideoIds.length,
+      playCalls: window.__fakeYouTubePlayer.playCalls,
+      iframeApiControls: window.__fakeYouTubePlayer.options.playerVars.controls,
+      iframeApiAutoplay: window.__fakeYouTubePlayer.options.playerVars.autoplay
+    })""")
+    assert player_calls == {
+      'searches': 1, 'loaded': 1, 'playCalls': 0,
+      'iframeApiControls': 1, 'iframeApiAutoplay': 0
+    }, player_calls
+    page.keyboard.press('Escape')
+    assert player_panel.is_hidden()
+    assert player_toggle.get_attribute('aria-expanded') == 'false'
+    assert page.evaluate("document.activeElement.id") == 'youtube-player-toggle'
+
+    page.locator('.performer-settings-toggle').click()
+    assert page.locator('#performer-settings').is_visible()
+    player_toggle.click()
+    assert player_panel.is_visible()
+    assert page.locator('#performer-settings').is_hidden()
+    page.locator('.performer-settings-toggle').click()
+    assert player_panel.is_hidden()
+    assert page.locator('#performer-settings').is_visible()
+    page.locator('.performer-settings__close').click()
+
+    print('browser-check: accessible section navigation', flush=True)
+    section_ids = page.locator('main#contenido > section').evaluate_all(
+        "(items) => items.map(item => item.id)"
+    )
+    assert section_ids == ['inicio', 'manifiesto', 'ritual', 'formatos', 'sonido', 'booking'], section_ids
+    assert page.locator('.desktop-nav a[href="#sonido"]').count() == 1
+    assert page.locator('.mobile-menu a[href="#sonido"]').count() == 1
+
+    page.locator('.desktop-nav a[href="#sonido"]').click()
+    page.wait_for_function(
+        "location.hash === '#sonido' && document.activeElement.id === 'sonido'",
+        timeout=3000,
+    )
+    assert page.locator('.desktop-nav a[href="#sonido"]').get_attribute('aria-current') == 'location'
+
+    # A long section must scroll natively before keyboard navigation advances.
+    page.evaluate("""() => {
+      document.querySelector('#manifiesto').style.minHeight = '1800px';
+      window.MonjesSectionNavigation.go('manifiesto');
+    }""")
+    page.wait_for_timeout(650)
+    start_y = page.evaluate('window.scrollY')
+    page.keyboard.press('ArrowDown')
+    page.wait_for_timeout(120)
+    inside_y = page.evaluate('window.scrollY')
+    assert inside_y > start_y, {'startY': start_y, 'insideY': inside_y}
+    assert page.evaluate('location.hash') == '#manifiesto'
+
+    page_down_start = page.evaluate('window.scrollY')
+    page.keyboard.press('PageDown')
+    page.wait_for_timeout(120)
+    page_down_end = page.evaluate('window.scrollY')
+    assert page_down_end > page_down_start, {'pageDownStart': page_down_start, 'pageDownEnd': page_down_end}
+    assert page.evaluate('location.hash') == '#manifiesto'
+
+    page_up_start = page.evaluate('window.scrollY')
+    page.keyboard.press('PageUp')
+    page.wait_for_timeout(120)
+    page_up_end = page.evaluate('window.scrollY')
+    assert page_up_end < page_up_start, {'pageUpStart': page_up_start, 'pageUpEnd': page_up_end}
+    assert page.evaluate('location.hash') == '#manifiesto'
+
+    page.evaluate("""() => {
+      const section = document.querySelector('#manifiesto');
+      window.scrollTo({
+        top: window.scrollY + section.getBoundingClientRect().bottom - window.innerHeight,
+        behavior: 'instant'
+      });
+    }""")
+    page.wait_for_function(
+        "document.querySelector('#manifiesto').getBoundingClientRect().bottom <= innerHeight + 10",
+        timeout=2500,
+    )
+    page.keyboard.press('ArrowDown')
+    page.wait_for_function(
+        "location.hash === '#ritual' && document.activeElement.id === 'ritual'",
+        timeout=3000,
+    )
+
+    # Browser history must restore explicit section navigation.
+    page.evaluate('window.history.back()')
+    page.wait_for_function("location.hash === '#manifiesto'", timeout=3000)
+    page.evaluate('window.history.back()')
+    page.wait_for_function("location.hash === '#sonido'", timeout=3000)
+    page.evaluate('window.history.forward()')
+    page.wait_for_function("location.hash === '#manifiesto'", timeout=3000)
+    page.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })")
+    page.evaluate("window.location.hash = '#booking'")
+    page.wait_for_function("location.hash === '#booking'", timeout=3000)
+    page.wait_for_function(
+        "(startY) => window.scrollY > startY + 100",
+        arg=0,
+        timeout=5000,
+    )
+
+    # Interactive controls retain their native arrow-key behavior.
+    arrow_was_prevented = page.locator('#booking-form textarea').evaluate("""element => {
+      element.focus();
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowDown', bubbles: true, cancelable: true
+      });
+      element.dispatchEvent(event);
+      return event.defaultPrevented;
+    }""")
+    assert not arrow_was_prevented, 'Section navigation intercepted ArrowDown inside textarea'
+    page.evaluate("""() => {
+      document.querySelector('#manifiesto').style.removeProperty('min-height');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.activeElement?.blur();
+    }""")
+    page.wait_for_timeout(120)
+    results.append({
+      'sectionNavigation': 'pass',
+      'soundAnchor': True,
+      'keyboardLongSection': 'native-scroll-then-next-section',
+      'interactiveArrowKeys': 'not-intercepted',
+    })
+
+    for width, height in [(2048, 1134), (1440, 900), (1024, 768), (823, 523), (768, 900), (568, 320), (390, 844), (320, 740), (844, 390)]:
         print(f'browser-check: viewport {width}x{height}', flush=True)
         page.set_viewport_size({'width': width, 'height': height})
         page.evaluate('window.scrollTo(0, 0)')
@@ -85,23 +290,55 @@ with sync_playwright() as p:
             }""",
             timeout=12000,
         )
-        # Check that the native view timeline advances with actual scrolling.
-        page.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })")
-        page.wait_for_timeout(70)
+        # Verify the rendered scroll-driven transform, not a potentially stale
+        # animation.currentTime snapshot. Force instant scrolling and wait for the
+        # actual scroll position before reading the computed style.
+        page.evaluate("""() => {
+          document.documentElement.style.scrollBehavior = 'auto';
+          window.scrollTo(0, 0);
+        }""")
+        page.wait_for_function("window.scrollY === 0", timeout=2000)
+        page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
         native_timeline_supported = page.evaluate("CSS.supports('view-timeline-name: --scene-view') && CSS.supports('animation-timeline: --scene-view') && CSS.supports('animation-range: entry 0% exit 100%')")
         timeline_start = page.evaluate("""() => {
-          const animation = document.querySelector('#inicio .scene-media img').getAnimations()[0];
-          return animation && animation.currentTime ? animation.currentTime.value : null;
+          const image = document.querySelector('#inicio .scene-media img');
+          const animation = [...image.getAnimations()].find(item =>
+            String(item.animationName || '').startsWith('scene-scroll-depth')
+          );
+          return {
+            transform: getComputedStyle(image).transform,
+            animationName: animation ? animation.animationName : null,
+            progress: animation ? animation.effect.getComputedTiming().progress : null
+          };
         }""")
-        page.evaluate("window.scrollTo({ top: 420, behavior: 'instant' })")
-        page.wait_for_timeout(150)
+        max_scroll = page.evaluate("Math.max(0, document.documentElement.scrollHeight - window.innerHeight)")
+        target_scroll = min(420, max_scroll)
+        assert target_scroll > 0, {'maxScroll': max_scroll, 'width': width}
+        page.evaluate("(target) => window.scrollTo(0, target)", target_scroll)
+        page.wait_for_function(f"Math.abs(window.scrollY - {target_scroll}) < 2", timeout=2500)
+        page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
         timeline_later = page.evaluate("""() => {
-          const animation = document.querySelector('#inicio .scene-media img').getAnimations()[0];
-          return animation && animation.currentTime ? animation.currentTime.value : null;
+          const image = document.querySelector('#inicio .scene-media img');
+          const animation = [...image.getAnimations()].find(item =>
+            String(item.animationName || '').startsWith('scene-scroll-depth')
+          );
+          return {
+            transform: getComputedStyle(image).transform,
+            animationName: animation ? animation.animationName : null,
+            progress: animation ? animation.effect.getComputedTiming().progress : null
+          };
         }""")
         if native_timeline_supported:
-            assert timeline_start is not None and timeline_later is not None and abs(timeline_later - timeline_start) > .1, {
-                'timelineStart': timeline_start, 'timelineLater': timeline_later, 'width': width
+            assert (
+                timeline_start['animationName'] is not None
+                and timeline_later['animationName'] is not None
+                and timeline_start['transform'] != timeline_later['transform']
+            ), {
+                'timelineStart': timeline_start,
+                'timelineLater': timeline_later,
+                'scrollY': page.evaluate('window.scrollY'),
+                'targetScroll': target_scroll,
+                'width': width,
             }
         else:
             assert page.evaluate("document.documentElement.classList.contains('no-scroll-timeline') && document.querySelector('#inicio').classList.contains('scene-in-view')"), 'IntersectionObserver fallback did not activate'
@@ -199,15 +436,39 @@ with sync_playwright() as p:
           const box = (selector) => {
             const element = document.querySelector(selector);
             const rect = element.getBoundingClientRect();
-            return { x: rect.x, width: rect.width, right: rect.right };
+            return { x: rect.x, y: rect.y, width: rect.width, height: rect.height, right: rect.right, bottom: rect.bottom };
+          };
+          const sectionMetric = (sectionSelector, contentSelector) => {
+            const section = document.querySelector(sectionSelector);
+            const content = section.querySelector(contentSelector);
+            const rect = section.getBoundingClientRect();
+            const style = getComputedStyle(section);
+            const px = (name) => parseFloat(style[name]) || 0;
+            const requiredHeight = content.offsetHeight
+              + px('paddingTop') + px('paddingBottom')
+              + px('borderTopWidth') + px('borderBottomWidth');
+            return {
+              x: rect.x,
+              width: rect.width,
+              height: rect.height,
+              viewportHeight: innerHeight,
+              contentHeight: content.offsetHeight,
+              requiredHeight,
+              expectedHeight: Math.max(innerHeight, requiredHeight),
+              clientHeight: section.clientHeight,
+              scrollHeight: section.scrollHeight,
+              verticalOverflow: section.scrollHeight - section.clientHeight
+            };
           };
           return {
             viewport: window.innerWidth,
+            viewportHeight: window.innerHeight,
             main: box('.page-shell'),
             hero: box('#inicio'),
             manifesto: box('#manifiesto'),
             ritual: box('#ritual'),
             formats: box('#formatos'),
+            sound: box('.sound'),
             soundPanel: box('.sound-panel'),
             booking: box('#booking'),
             manifestoContent: box('#manifiesto .section-inner'),
@@ -215,11 +476,26 @@ with sync_playwright() as p:
             formatsContent: box('#formatos .section-inner'),
             bookingContent: box('#booking .section-inner'),
             soundContent: box('.sound-panel__inner'),
+            sectionHeights: {
+              hero: sectionMetric('#inicio', '.hero-inner'),
+              manifesto: sectionMetric('#manifiesto', '.section-inner'),
+              ritual: sectionMetric('#ritual', '.section-inner'),
+              formats: sectionMetric('#formatos', '.section-inner'),
+              sound: sectionMetric('.sound', '.sound-panel'),
+              booking: sectionMetric('#booking', '.section-inner')
+            },
+            sceneCoverage: {
+              hero: box('#inicio .scene-media'),
+              manifesto: box('#manifiesto .scene-media'),
+              ritual: box('#ritual .scene-media'),
+              sound: box('.sound-panel .scene-media'),
+              booking: box('#booking .scene-media')
+            },
             leftPerformer: box('.performer--left'),
             rightPerformer: box('.performer--right')
           };
         }""")
-        for section_name in ['main', 'hero', 'manifesto', 'ritual', 'formats', 'soundPanel', 'booking']:
+        for section_name in ['main', 'hero', 'manifesto', 'ritual', 'formats', 'sound', 'soundPanel', 'booking']:
             assert abs(layout_geometry[section_name]['width'] - width) <= 1.5, {
                 'width': width, 'section': section_name, 'geometry': layout_geometry
             }
@@ -232,6 +508,24 @@ with sync_playwright() as p:
                 assert content_width >= width * .65, {
                     'width': width, 'content': content_name, 'geometry': layout_geometry
                 }
+        for section_name, metrics in layout_geometry['sectionHeights'].items():
+            assert metrics['height'] >= metrics['viewportHeight'] - 1.5, {
+                'width': width, 'section': section_name, 'metrics': metrics
+            }
+            assert abs(metrics['height'] - metrics['expectedHeight']) <= 2.5, {
+                'width': width, 'section': section_name, 'metrics': metrics
+            }
+            assert metrics['verticalOverflow'] <= 1.5, {
+                'width': width, 'section': section_name, 'metrics': metrics
+            }
+        for scene_name, scene_box in layout_geometry['sceneCoverage'].items():
+            # Sound artwork sits inside a bordered panel; compare against the
+            # panel's border box, not the outer section's additional border.
+            section_key = 'soundPanel' if scene_name == 'sound' else scene_name
+            section_box = layout_geometry[section_key]
+            assert abs(scene_box['height'] - section_box['height']) <= 2.5, {
+                'width': width, 'scene': scene_name, 'sceneBox': scene_box, 'sectionBox': section_box
+            }
         if width >= 1181:
             assert layout_geometry['leftPerformer']['right'] <= layout_geometry['manifestoContent']['x'] + 2, layout_geometry
             assert layout_geometry['rightPerformer']['x'] >= layout_geometry['manifestoContent']['right'] - 8, layout_geometry
@@ -301,8 +595,48 @@ with sync_playwright() as p:
             button.click()
             assert button.get_attribute('aria-expanded') == 'true'
             assert page.locator('#mobile-menu').is_visible()
-            page.locator('#mobile-menu a[href="#booking"]').click()
+            last_menu_link = page.locator('#mobile-menu a[href="#booking"]')
+            last_menu_link.scroll_into_view_if_needed()
+            menu_geometry = page.evaluate("""() => {
+              const menu = document.querySelector('#mobile-menu');
+              const link = menu.querySelector('a[href="#booking"]');
+              const menuRect = menu.getBoundingClientRect();
+              const linkRect = link.getBoundingClientRect();
+              return {
+                menuTop: menuRect.top,
+                menuBottom: menuRect.bottom,
+                menuHeight: menuRect.height,
+                menuScrollHeight: menu.scrollHeight,
+                menuClientHeight: menu.clientHeight,
+                linkTop: linkRect.top,
+                linkBottom: linkRect.bottom
+              };
+            }""")
+            assert menu_geometry['menuTop'] >= -1 and menu_geometry['menuBottom'] <= height + 1, {
+                'width': width, 'height': height, 'menu': menu_geometry
+            }
+            assert menu_geometry['linkTop'] >= menu_geometry['menuTop'] - 1
+            assert menu_geometry['linkBottom'] <= menu_geometry['menuBottom'] + 1
+            last_menu_link.click()
+            page.wait_for_function("location.hash === '#booking' && document.activeElement.id === 'booking'", timeout=3000)
             assert button.get_attribute('aria-expanded') == 'false'
+            if width == 568:
+                player_toggle.click()
+                page.wait_for_function(
+                    "window.__fakeYouTubePlayer && !document.querySelector('#youtube-search-input').disabled",
+                    timeout=3000,
+                )
+                page.wait_for_function(
+                    "window.__fakeYouTubePlayer.sizes.some(size => size.width <= 360 && size.height === 200)",
+                    timeout=2000,
+                )
+                player_geometry = page.locator('#youtube-player-frame').bounding_box()
+                player_size = page.evaluate("window.__fakeYouTubePlayer.sizes.at(-1)")
+                assert player_geometry['height'] >= 200, {
+                    'width': width, 'height': height, 'frame': player_geometry, 'player': player_size
+                }
+                assert player_size['width'] >= 200 and player_size['height'] >= 200, player_size
+                page.keyboard.press('Escape')
         else:
             assert data['framePosition'] == 'fixed', data
             assert all(image['width'] > image['height'] for image in data['images']), data
@@ -327,6 +661,12 @@ with sync_playwright() as p:
     page.emulate_media(reduced_motion='reduce')
     motion_duration = page.evaluate("getComputedStyle(document.querySelector('.corner-light')).animationDuration")
     assert motion_duration in ('1e-05s', '0.00001s', '0.01ms', '0s'), motion_duration
+    page.evaluate("window.MonjesSectionNavigation.go('booking')")
+    reduced_navigation = page.evaluate("""() => ({
+      enabled: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      scrollBehavior: getComputedStyle(document.documentElement).scrollBehavior
+    })""")
+    assert reduced_navigation == {'enabled': True, 'scrollBehavior': 'auto'}, reduced_navigation
     reduced_color = page.evaluate("""() => {
       const a = document.querySelector('#inicio').getBoundingClientRect();
       const b = document.querySelector('#manifiesto').getBoundingClientRect();

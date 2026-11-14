@@ -13,6 +13,9 @@ const js = read('app.js');
 const scrollScenes = read('scroll-scenes.js');
 const performerMotion = read('performer-motion.js');
 const performerSettings = read('performer-settings.js');
+const youtubePlayer = read('youtube-player.js');
+const youtubeApi = read('api/youtube-search.js');
+const buildScript = read('scripts/build-static.sh');
 
 assert.match(html, /<html lang="es">/);
 assert.match(html, /<main id="contenido"/);
@@ -26,6 +29,30 @@ assert.match(html, /<script src="\/scroll-scenes\.js" defer><\/script>/);
 assert.match(html, /<script src="\/performer-motion\.js" defer><\/script>/);
 assert.match(html, /<script src="\/performer-settings\.js" defer><\/script>/);
 assert.match(html, /id="performer-settings"/);
+assert.match(html, /id="sonido"/);
+assert.match(html, /href="#sonido"/);
+assert.ok(html.includes('<script src="/section-navigation.js" defer></script>'));
+assert.match(read('section-navigation.js'), /ArrowDown/);
+assert.match(read('section-navigation.js'), /PageDown/);
+assert.match(read('section-navigation.js'), /aria-current/);
+assert.match(read('section-navigation.js'), /prefers-reduced-motion/);
+
+assert.match(html, /id="youtube-player-toggle"/);
+assert.match(html, /id="youtube-player-panel"/);
+assert.match(html, /id="youtube-search-form"/);
+assert.match(html, /id="youtube-player-frame"/);
+assert.ok(html.includes('<script src="/youtube-player.js" defer></script>'));
+assert.match(youtubePlayer, /loadVideoById/);
+assert.match(youtubePlayer, /pauseVideo/);
+assert.match(youtubePlayer, /onAutoplayBlocked/);
+assert.match(youtubePlayer, /prefers-reduced-motion|youtube-player-panel/);
+assert.match(youtubeApi, /videoEmbeddable/);
+assert.match(youtubeApi, /madeForKids/);
+assert.match(youtubeApi, /x-goog-api-key/);
+assert.match(youtubeApi, /YOUTUBE_API_KEY/);
+assert.doesNotMatch(youtubeApi, /AIza[0-9A-Za-z_-]{30,}/);
+assert.match(buildScript, /youtube-player\.js/);
+
 assert.match(html, /data-performer-action="dance"/);
 assert.match(html, /data-performer-action="visibility"/);
 assert.match(html, /aria-controls="performer-settings"/);
@@ -93,6 +120,15 @@ assert.match(css, /\.performer-settings\[hidden\]/);
 assert.match(layoutCss, /--content-max:\s*1760px/);
 assert.match(layoutCss, /\.page-shell\s*\{\s*width:\s*100%/);
 assert.match(layoutCss, /\.section-inner/);
+assert.match(layoutCss, /min-height:\s*100vh/);
+assert.match(layoutCss, /min-height:\s*100svh/);
+assert.match(layoutCss, /min-height:\s*100dvh/);
+assert.match(layoutCss, /--section-block-space/);
+assert.match(layoutCss, /\.section-block\s*\{[^}]*display:\s*grid/s);
+assert.match(layoutCss, /\.sound-panel\s*\{[^}]*display:\s*grid/s);
+assert.match(layoutCss, /max-height:\s*calc\(100dvh - 112px\)/);
+assert.match(layoutCss, /overflow-y:\s*auto/);
+assert.match(layoutCss, /overscroll-behavior:\s*contain/);
 assert.match(layoutCss, /--section-gutter/);
 assert.match(layoutCss, /\.performers\s*\{\s*z-index:\s*3/);
 assert.match(performerMotion, /prefers-reduced-motion/);
@@ -115,6 +151,8 @@ const minimumSizes = {
   'assets/monks/monje-izquierdo.webp': 20000,
   'assets/monks/monje-derecho.webp': 20000,
   'assets/monks/dance/monje-left-dance.webp': 50000,
+  'assets/monks/dance/source/monje-left-dance-original.webp': 50000,
+  'assets/monks/dance/source/monje-right-dance-original.webp': 50000,
   'assets/monks/dance/monje-right-dance.webp': 50000,
   'assets/monks/dance/monje-left-poster.webp': 5000,
   'assets/monks/dance/monje-right-poster.webp': 5000,
@@ -151,8 +189,13 @@ for (const [side, performer] of Object.entries(danceManifest.performers)) {
     const digest = createHash('sha256').update(readFileSync(assetPath)).digest('hex');
     assert.equal(digest, asset.sha256, `Dance SHA-256 mismatch: ${asset.file}`);
   }
-  assert.equal(performer.animation.frames, 9, `${side} dance cycle must contain 9 frames`);
-  assert.equal(performer.animation.frameDurationMs, 280, `${side} dance timing mismatch`);
+  assert.equal(performer.animation.frames, 63, `${side} dance cycle must contain 63 interpolated frames`);
+  assert.equal(performer.animation.frameDurationMs, 40, `${side} dance timing mismatch`);
+  assert.equal(performer.animation.totalDurationMs, 2520, `${side} dance cycle duration mismatch`);
+  const sourcePath = join(root, performer.source);
+  assert.ok(existsSync(sourcePath), `Missing preserved ${side} source animation`);
+  const sourceDigest = createHash('sha256').update(readFileSync(sourcePath)).digest('hex');
+  assert.equal(sourceDigest, performer.sourceSha256, `${side} source SHA-256 mismatch`);
 }
 
-console.log('PASS — Phase 2/3/4/5/6 smoke tests (semantic HTML, eight scenes, full-bleed sections, fluid content rails, ambient profiles, scroll timelines, animated performers, accessible settings, reduced motion, and asset integrity).');
+console.log('PASS — Phase 1/2/3/4/5/6 smoke tests (semantic HTML, eight scenes, full-bleed sections, fluid content rails, ambient profiles, scroll timelines, animated performers, accessible settings, reduced motion, and asset integrity).');

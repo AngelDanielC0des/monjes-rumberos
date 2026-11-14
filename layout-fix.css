@@ -351,3 +351,68 @@
   :root { --section-gutter: 18px; }
   .performers { opacity: .13; }
 }
+
+/* --------------------------------------------------------------------------
+   PHASE 2 — Adaptive viewport sections
+   A section fills one viewport when its content fits. It grows naturally
+   when the content needs more room; never use a fixed height that can clip it.
+   -------------------------------------------------------------------------- */
+:root {
+  --section-block-space: clamp(44px, 6.5vh, 92px);
+  --hero-padding-top: clamp(104px, 13vh, 152px);
+  --hero-padding-bottom: clamp(84px, 10vh, 116px);
+  --sound-padding-block: clamp(64px, 7vh, 104px);
+}
+
+.hero,
+.section-block {
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+.hero {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding-block: var(--hero-padding-top) var(--hero-padding-bottom);
+}
+
+.section-block {
+  display: grid;
+  align-content: center;
+  padding-block: var(--section-block-space);
+}
+
+/* The sound artwork is a nested scene panel; let that panel own the viewport
+   background while the outer semantic section remains content-driven. */
+.sound.section-block {
+  display: block;
+  padding: 0;
+  border-top: 0;
+}
+
+.sound-panel {
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  padding-block: var(--sound-padding-block);
+}
+
+/* Low-height phones: keep the complete mobile navigation reachable. */
+@media (max-width: 640px) {
+  .mobile-menu {
+    box-sizing: border-box;
+    max-height: calc(100vh - 112px);
+    max-height: calc(100svh - 112px);
+    max-height: calc(100dvh - 112px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-block: 12px;
+  }
+}
