@@ -13,6 +13,9 @@ const js = read('app.js');
 const scrollScenes = read('scroll-scenes.js');
 const performerMotion = read('performer-motion.js');
 const performerSettings = read('performer-settings.js');
+const youtubePlayer = read('youtube-player.js');
+const youtubeApi = read('api/youtube-search.js');
+const buildScript = read('scripts/build-static.sh');
 
 assert.match(html, /<html lang="es">/);
 assert.match(html, /<main id="contenido"/);
@@ -33,6 +36,22 @@ assert.match(read('section-navigation.js'), /ArrowDown/);
 assert.match(read('section-navigation.js'), /PageDown/);
 assert.match(read('section-navigation.js'), /aria-current/);
 assert.match(read('section-navigation.js'), /prefers-reduced-motion/);
+
+assert.match(html, /id="youtube-player-toggle"/);
+assert.match(html, /id="youtube-player-panel"/);
+assert.match(html, /id="youtube-search-form"/);
+assert.match(html, /id="youtube-player-frame"/);
+assert.ok(html.includes('<script src="/youtube-player.js" defer></script>'));
+assert.match(youtubePlayer, /loadVideoById/);
+assert.match(youtubePlayer, /pauseVideo/);
+assert.match(youtubePlayer, /onAutoplayBlocked/);
+assert.match(youtubePlayer, /prefers-reduced-motion|youtube-player-panel/);
+assert.match(youtubeApi, /videoEmbeddable/);
+assert.match(youtubeApi, /madeForKids/);
+assert.match(youtubeApi, /x-goog-api-key/);
+assert.match(youtubeApi, /YOUTUBE_API_KEY/);
+assert.doesNotMatch(youtubeApi, /AIza[0-9A-Za-z_-]{30,}/);
+assert.match(buildScript, /youtube-player\.js/);
 
 assert.match(html, /data-performer-action="dance"/);
 assert.match(html, /data-performer-action="visibility"/);
