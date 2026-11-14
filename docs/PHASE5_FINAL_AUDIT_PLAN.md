@@ -64,10 +64,22 @@ Cerrar la auditoría de las fases 0–4 y dejar la rama lista para una validaci�
 - `npm run build`
 - Confirmar que el bundle estático incluye el controlador de navegación y el reproductor, pero no la función API ni secretos.
 
+## Resultados de auditoría automatizada — 2026-11-14
+
+- **Git:** `main` conserva el SHA base `2448be30dc88d4b58606f2f3cfd1d975d6dfecb6`. El PR #1 sigue abierto, en borrador y sin fusionar.
+- **CI del código:** PASS en el commit de código `d5ff15a65e3cbe4f15994cd2b560d696c4abeea0`, run [43556935180](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43556935180). Los commits posteriores registrados hasta este informe solo actualizan documentación.
+- **Responsive:** Chromium cubre nueve tamaños de pantalla para la landing, y pruebas adicionales del panel YouTube en orientación horizontal de poca altura.
+- **Accesibilidad automatizada:** navegación por teclado, secciones altas, foco, Escape, menú móvil, historial/hash, formularios y movimiento reducido verificados. No sustituye una revisión manual con lector de pantalla.
+- **Build:** 41 archivos estáticos. La función `api/youtube-search.js` no se copia a `public/`.
+- **Seguridad YouTube:** clave leída solo desde `process.env.YOUTUBE_API_KEY`; tests cubren ausencia de clave, restricciones de origen, parámetros oficiales, elegibilidad embeddable/Made for Kids, cuota y fallos upstream. No se ha encontrado ni añadido una clave real.
+- **SEO:** se conservan title, description, canonical, Open Graph, Twitter metadata, sitemap y robots.
+- **Vercel:** existe el proyecto `monjes-rumberos` y el alias productivo `monjes-rumberos.vercel.app`. La ficha de proyecto no muestra enlace Git a este repositorio y la lista de variables de entorno está vacía. No se ha creado ningún deployment ni se ha cambiado un alias.
+- **Pendiente:** búsqueda real de YouTube, reproducción real del iframe y Preview Deployment, bloqueados hasta configurar la API key y confirmar/vincular el proyecto Vercel correcto.
+
 ## Bloqueos externos para la validación completa
 
 1. **Google Cloud:** falta crear y restringir una API key para YouTube Data API v3.
-2. **Vercel:** el repositorio no aparece vinculado a un proyecto en el contexto de Vercel conectado. Hay que vincularlo o seleccionar/crear el proyecto correcto.
+2. **Vercel:** existe el proyecto `monjes-rumberos` y el dominio productivo `monjes-rumberos.vercel.app`, pero la ficha no muestra un vínculo Git con este repositorio. La lista de variables de entorno está vacía. Hay que confirmar el proyecto correcto y vincular el repositorio sin cambiar la rama de producción.
 3. **Preview:** una vez configurado lo anterior, desplegar solo un Preview de la rama de trabajo y probar búsqueda, elegibilidad, reproducción, errores, cuota y dimensiones reales del iframe.
 
 No se debe configurar la clave en el código fuente ni en variables públicas. Para la primera validación, usar el entorno Preview de Vercel; no añadir la clave al entorno Production todavía.
