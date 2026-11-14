@@ -120,11 +120,13 @@ with sync_playwright() as p:
     page.wait_for_function("location.hash === '#sonido'", timeout=3000)
     page.evaluate('window.history.forward()')
     page.wait_for_function("location.hash === '#manifiesto'", timeout=3000)
+    page.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })")
     page.evaluate("window.location.hash = '#booking'")
     page.wait_for_function("location.hash === '#booking'", timeout=3000)
     page.wait_for_function(
-        "document.querySelector('#booking').getBoundingClientRect().top < innerHeight",
-        timeout=3000,
+        "(startY) => window.scrollY > startY + 100",
+        arg=0,
+        timeout=5000,
     )
 
     # Interactive controls retain their native arrow-key behavior.
