@@ -134,7 +134,22 @@
     else return;
 
     const current = sections[activeIndex];
-    if (!current || !canAdvanceFromSection(current, direction)) return;
+    if (!current) return;
+
+    if (!canAdvanceFromSection(current, direction)) {
+      // A programmatically focused section does not receive native page-scroll
+      // defaults consistently across browsers. Reproduce the expected keyboard
+      // scroll explicitly, then advance only once the section edge is reached.
+      const distance = event.key === 'PageDown' || event.key === 'PageUp'
+        ? Math.max(120, window.innerHeight - 96)
+        : 64;
+      event.preventDefault();
+      window.scrollTo({
+        top: Math.max(0, window.scrollY + direction * distance),
+        behavior: 'instant',
+      });
+      return;
+    }
 
     const nextIndex = activeIndex + direction;
     if (nextIndex < 0 || nextIndex >= sections.length) return;
