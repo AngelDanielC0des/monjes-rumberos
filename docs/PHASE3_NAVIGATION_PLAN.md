@@ -2,7 +2,7 @@
 
 ## Estado
 
-Plan técnico preparado sobre la rama limpia. No se modifica producción. La Fase 1 (baile interpolado) y la Fase 2 (secciones adaptativas) ya están implementadas y su CI más reciente está en verde.
+**FASE 3 COMPLETADA Y VERIFICADA.** Implementación en la rama de trabajo, con CI verde en el commit `b5ed215b12259a82a2a71de78adaf6932f1620e8` (run [43554933589](https://github.com/AngelDanielC0des/monjes-rumberos/actions/runs/43554933589)). No se modifica producción.
 
 ## Objetivo
 
@@ -58,14 +58,16 @@ Permitir recorrer la landing por secciones con ratón, trackpad, teclado, enlace
 - No alterar la geometría adaptativa ya validada (Fase 2), salvo correcciones justificadas por regresión.
 - No crear ni promover deployments de producción.
 
-## Secuencia
+## Implementación y validación
 
-1. Corregir IDs y enlaces de navegación.
-2. Añadir estado activo con `IntersectionObserver` robusto y fallback.
-3. Implementar navegación de teclado contextual y segura.
-4. Decidir snap proximity mediante pruebas, no por preferencia estética.
-5. Añadir pruebas de teclado, hash, menú y secciones altas.
-6. Ejecutar CI; corregir cualquier regresión antes de cerrar la fase.
+- Se añadió `id="sonido"` y se incorporó «Pulso electrónico» a los menús desktop y móvil.
+- `section-navigation.js` mide la sección activa y aplica `aria-current="location"` a su enlace.
+- Los enlaces del menú mantienen destinos HTML reales; la navegación explícita actualiza el fragmento, enfoca la sección y respeta `prefers-reduced-motion`.
+- PageUp/PageDown y ArrowUp/ArrowDown navegan entre secciones cuando corresponde. En secciones largas, primero desplazan la página (64 px para flechas; casi una pantalla para PageUp/PageDown) y solo avanzan al alcanzar el borde.
+- Los controles interactivos no se interceptan; el scroll con rueda/touch no roba el foco.
+- Se conserva el scroll nativo libre: no se activa scroll-snap obligatorio ni proximity, porque la expansión adaptativa y las secciones largas requieren navegación sin saltos forzados.
+- Se validaron enlaces de sonido, foco, historial Back/Forward, hash directo, formularios, menú móvil, secciones largas y movimiento reducido.
+- Chromium, pruebas de humo, regresión de WebP y build estático: PASS.
 
 ## Protección Git
 
