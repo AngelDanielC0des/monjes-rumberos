@@ -610,10 +610,16 @@ with sync_playwright() as p:
                     "window.__fakeYouTubePlayer && !document.querySelector('#youtube-search-input').disabled",
                     timeout=3000,
                 )
+                page.wait_for_function(
+                    "window.__fakeYouTubePlayer.sizes.some(size => size.width <= 360 && size.height === 200)",
+                    timeout=2000,
+                )
                 player_geometry = page.locator('#youtube-player-frame').bounding_box()
-                assert player_geometry['width'] >= 200 and player_geometry['height'] >= 200, {
-                    'width': width, 'height': height, 'player': player_geometry
+                player_size = page.evaluate("window.__fakeYouTubePlayer.sizes.at(-1)")
+                assert player_geometry['height'] >= 200, {
+                    'width': width, 'height': height, 'frame': player_geometry, 'player': player_size
                 }
+                assert player_size['width'] >= 200 and player_size['height'] >= 200, player_size
                 page.keyboard.press('Escape')
         else:
             assert data['framePosition'] == 'fixed', data
